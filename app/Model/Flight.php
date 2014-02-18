@@ -75,6 +75,33 @@ class Flight extends AppModel {
 			return $headerArray;
 		}
 	}
+
+	public function getLatLong($path = null) {
+		if(!$path){
+			throw new NotFoundException(__('Invalid file'));
+		}
+		$file = new File('files'. DS . 'flights' . DS . $path, true, 0644);
+		if($file->size() == 0){
+			throw new NotFoundException(__('No such file'));
+		}
+
+		if($handle = fopen('files'. DS . 'flights' . DS . $path,'r')){
+			
+			fgetcsv($handle);
+			fgetcsv($handle);
+			fgetcsv($handle);
+			$latLongArray = array('lat' => array(),
+														'long'=> array());
+			$index = 0;
+			while($data = fgetcsv($handle)){
+				$latLongArray['lat'][$index] = $data[4];
+				$latLongArray['long'][$index] = $data[5];
+				$index++;
+			}
+
+			return $latLongArray;
+		}
+	}
 }
 
 ?>

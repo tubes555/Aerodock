@@ -31,6 +31,7 @@ class FlightsController extends AppController {
 
 		$this->set('flight', $flight);
 		$this->set('csv', $this->Flight->getFileAsArray($flight['Flight']['csvPath']));
+		$this->set('latLong', $this->Flight->getLatLong($flight['Flight']['csvPath']));
 	}
 } 
 ?>
