@@ -4,7 +4,7 @@
 	'Add Flight',
 	array('controller' => 'flights', 'action' => 'add'));
 	?>
-<table>
+<table class="table">
 	<tr>
 		<th>Student</th>
 		<th>Instructor</th>
@@ -17,6 +17,10 @@
 		<td><?php echo $flight['Flight']['instructorID']; ?></td>
 		<td><?php echo $flight['Flight']['tailNo']; ?></td>
 		<td><?php echo $flight['Flight']['date']; ?></td>
+		<td><?php echo $this->Html->link(
+			'View Flight',
+			array('controller' => 'flights', 'action' => 'view', $flight['Flight']['id']));
+			?></td>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($flight); ?>

@@ -4,19 +4,7 @@
 
 <div  class="col-md-6">
   <div id="googleMap" style="width:500px;height:380px;"></div>
-</div><?php /*
-<table>
-	<th>Latitude</th><th>Longitude</th>
-	<?php for ($i=0; $i < count($latLong['lat']); $i++): ?>
-		<?php if(!ctype_space($latLong['lat'][$i]) and !ctype_space($latLong['lat'][$i])): ?>
-			<tr>
-			<td><?php echo $latLong['lat'][$i]  ?></td>
-			<td><?php echo $latLong['long'][$i] ?></td>
-	  </tr>
-		<?php endif ?> 
-	<?php endfor ?>
-</table>
-*/?>
+</div>
 
 <script>
   var map;
