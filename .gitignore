@@ -8,6 +8,7 @@
 /build
 /dist
 /tags
+/webroot/files
 
 # OS generated files #
 ######################
