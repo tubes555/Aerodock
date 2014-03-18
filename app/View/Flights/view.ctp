@@ -1,19 +1,40 @@
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
 
 <h1>Flight <?php echo $flight['Flight']['id'] ?></h1>
+<div class="row">
+  <div  class="col-md-6">
+    <div id="googleMap" style="width:500px;height:380px;"></div>
+  </div>
+  <div class="col-md-6">
+        <table class="table table-striped">
+      <tr>
+        <td id="t1">Turn One</td>
+      </tr>
+      <tr>
+        <td id="t2">Turn Two</td>
+      </tr>
+      <tr>
+        <td id="t3">Turn Three</td>
+      </tr>
+      <tr>
+        <td id="t4">Turn Four</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row">
 
-<div  class="col-md-6">
-  <div id="googleMap" style="width:500px;height:380px;"></div>
 </div>
 
 <script>
   var map;
   var mapProp;
+
   function initialize()
   {
     mapProp = {
-      center:new google.maps.LatLng(35.878, -86.3795624),
-      zoom:12,
+      center: new google.maps.LatLng(<?php echo $center['lat']; ?>, <?php echo $center['long'];?>),
+      zoom: <?php echo $zoomLevel ?>,
       mapTypeId:google.maps.MapTypeId.ROADMAP
     };
 
@@ -39,3 +60,4 @@
   }
   google.maps.event.addDomListener(window, 'load', initialize);
   </script>
+

@@ -26,6 +26,7 @@ class Flight extends AppModel {
 		)
 	);
 
+
 	public function uploadFile( $check ) {
 		// Shifts the first item out of the array, equivalent to popping the stack
 		$uploadData = array_shift($check);
@@ -93,6 +94,7 @@ class Flight extends AppModel {
 		}
 
 		if($handle = fopen('files'. DS . 'flights' . DS . $path,'r')){
+
 			// Discard the first 3 lines.
 			fgetcsv($handle);
 			fgetcsv($handle);
@@ -101,17 +103,65 @@ class Flight extends AppModel {
 			$latLongArray = array('lat' => array(),
 														'long'=> array());
 			$index = 0;
+
+			// Pull the first line
+			$data = fgetcsv($handle);
+			// Keep pulling new lines until the lat and long are not blank
+			while(ctype_space($data[4]) || ctype_space($data[5])){
+				$data = fgetcsv($handle);
+			}
+			$latLongArray['lat'][$index] = $data[4];
+			$latLongArray['long'][$index] = $data[5];
+			$maxLat = $data[4];
+			$minLat = $data[4];
+			$maxLong = $data[5];
+			$minLong = $data[5];
 			// While there is still data to return...
 			while($data = fgetcsv($handle)){
 				// Store that data in the array.
-				$latLongArray['lat'][$index] = $data[4];
-				$latLongArray['long'][$index] = $data[5];
-				$index++;
+				if(!empty($data[4]) && !empty($data[5]) && !ctype_space($data[4]) && !ctype_space($data[5])){
+					$latLongArray['lat'][$index]  = $data[4];
+					$latLongArray['long'][$index] = $data[5];
+					if($data[4] < $minLat){
+						$minLat = $data[4];
+					}
+					if($data[4] > $maxLat){
+						$maxLat = $data[4];
+					}				
+					if($data[5] < $minLong){
+						$minLong = $data[5];
+					}				
+					if($data[5] > $maxLong){
+						$maxLong = $data[5];
+					}
+					$index++;
+				}
 			}
 
-			return $latLongArray;
+			$center = array('lat' => ($maxLat + $minLat)/2,
+											'long' => ($maxLong + $minLong)/2);
+
+			$minMax = array('minLat' => $minLat,
+								  	  'maxLat' => $maxLat,
+								 	    'minLong' => $minLong,
+											'maxLong' => $maxLong,);
+
+			$zoomLevel = $this->calculateZoom($minMax);
+
+			return array('center' => $center,
+									 'latLongArray' => $latLongArray,
+									 'zoomLevel' => $zoomLevel);
 		}
 	}
+
+	private function calculateZoom($minMax){
+		$latZoom =  (int)(12 - log(($minMax['maxLat'] - $minMax['minLat'])/0.155,2));
+		$longZoom = (int)(12 - log(($minMax['maxLong'] - $minMax['minLong'])/0.22,2));
+		if($latZoom < $longZoom)
+			return $latZoom;
+		return $longZoom;
+	}
+
 }
 
 ?>
