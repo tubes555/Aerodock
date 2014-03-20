@@ -1,0 +1,177 @@
+<?php echo $this->Html->css('nv.d3.min');?>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
+
+<h1>Flight <?php echo $flight['Flight']['id'] ?></h1>
+<?php echo $this->Html->link('Back to all flights', 
+      array('controller' => 'flights', 'action' => 'index'))?>
+<div class="row">
+  <div  class="col-md-6">
+    <div id="googleMap" style="width:500px;height:380px;"></div>
+  </div>
+  <div class="col-md-5">
+        <table class="table table-striped">
+      <tr>
+        <td id="t1">Turn One</td>
+      </tr>
+      <tr>
+        <td id="t2">Turn Two</td>
+      </tr>
+      <tr>
+        <td id="t3">Turn Three</td>
+      </tr>
+      <tr>
+        <td id="t4">Turn Four</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-11">
+    <div id="chart1" class='with-transitions'>
+      <svg></svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  var map;
+  var mapProp;
+
+  function initialize()
+  {
+    mapProp = {
+      center: new google.maps.LatLng(<?php echo $center['lat']; ?>, <?php echo $center['long'];?>),
+      zoom: <?php echo $zoomLevel ?>,
+      mapTypeId:google.maps.MapTypeId.ROADMAP
+    };
+
+    var flightPlanCoordinates = [
+
+    		<?php for ($i=0; $i < count($latLong['lat']); $i++): ?>
+    		<?php if(!ctype_space($latLong['lat'][$i]) and !ctype_space($latLong['lat'][$i])): ?>
+        new google.maps.LatLng(<?php echo floatval($latLong['lat'][$i])?>, <?php echo floatval($latLong['long'][$i])?>),
+        <?php endif ?>
+        <?php endfor ?>]
+    map=new google.maps.Map(document.getElementById("googleMap")
+    ,mapProp);
+    var flightPath = new google.maps.Polyline({
+      path: flightPlanCoordinates,
+      geodesic: true,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    flightPath.setMap(map);
+    
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+<?php echo $this->Html->script('lib/d3.v3.js');
+echo $this->Html->script('nv.d3.js');
+echo $this->Html->script('src/tooltip.js');
+echo $this->Html->script('src/utils.js');
+echo $this->Html->script('src/models/legend.js');
+echo $this->Html->script('src/models/axis.js');
+echo $this->Html->script('src/models/scatter.js');
+echo $this->Html->script('src/models/line.js');
+echo $this->Html->script('src/models/lineChart.js');
+ ?>
+<script>
+  nv.addGraph(function() {
+    var chart = nv.models.lineChart();
+    var fitScreen = false;
+    var width = 600;
+    var height = 200;
+    var zoom = 1;
+
+    chart.useInteractiveGuideline(true);
+    chart.xAxis
+        .tickFormat(d3.format(',r'));
+
+    chart.yAxis
+        .axisLabel('Voltage (v)')
+        .tickFormat(d3.format(',.2f'));
+
+    d3.select('#chart1 svg')
+        .attr('perserveAspectRatio', 'xMinYMid')
+        .attr('width', width)
+        .attr('height', height)
+        .datum(flightInfo());
+
+    setChartViewBox();
+    resizeChart();
+
+    // These resizes both do the same thing, and require recalculating the chart
+    //nv.utils.windowResize(chart.update);
+    //nv.utils.windowResize(function() { d3.select('#chart1 svg').call(chart) });
+    nv.utils.windowResize(resizeChart);
+
+    function setChartViewBox() {
+      var w = width * zoom,
+          h = height * zoom;
+
+      chart
+          .width(w)
+          .height(h);
+
+      d3.select('#chart1 svg')
+          .attr('viewBox', '0 0 ' + w + ' ' + h)
+        .transition().duration(100)
+          .call(chart);
+    }
+
+    // This resize simply sets the SVG's dimensions, without a need to recall the chart code
+    // Resizing because of the viewbox and perserveAspectRatio settings
+    // This scales the interior of the chart unlike the above
+    function resizeChart() {
+      var container = d3.select('#chart1');
+      var svg = container.select('svg');
+
+      if (fitScreen) {
+        // resize based on container's width AND HEIGHT
+        var windowSize = nv.utils.windowSize();
+        svg.attr("width", windowSize.width);
+        svg.attr("height", windowSize.height);
+      } else {
+        // resize based on container's width
+        var aspect = chart.width() / chart.height();
+        var targetWidth = parseInt(container.style('width'));
+        svg.attr("width", targetWidth);
+        svg.attr("height", Math.round(targetWidth / aspect));
+      }
+    };
+
+
+    return chart;
+  });
+
+
+  function flightInfo() {
+    var altitude = [];
+    var airspeed = [];
+    var index = 0;
+    <?php for ($i=0; $i < count($latLong['lat']); $i++): ?>
+      altitude.push({x: index, y:<?php echo $altitude[$i]?>});
+      airspeed.push({x: index, y:<?php echo $airspeed[$i]?>});
+      index++;
+    <?php endfor?>
+
+    return [
+      {
+        values: altitude,
+        key: "Altitude",
+        color: "#ff7f0e"
+      },
+      {
+        values: airspeed,
+        key: "airspeed",
+        color: "#22ff22"
+      }];
+
+  }
+
+
+
+</script>
+

@@ -3,7 +3,7 @@
 class Flight extends AppModel {
 //page 317 of cakePHPCookbook
 	public $validate = array(
-	'studentID' => array(
+	/*'studentID' => array(
 		'rule' => 'notEmpty'
 		),
 	'instructorID' => array(
@@ -14,7 +14,7 @@ class Flight extends AppModel {
 		),
 	'tailNo' => array(
 		'rule' => 'notEmpty'
-		),
+		),*/
 	'csvPath' => array(
 		'extension' => array(
 			'rule'=> array('extension', array('csv')),
@@ -102,6 +102,8 @@ class Flight extends AppModel {
 			// Initialize the array that we will return as an array of arrays.
 			$latLongArray = array('lat' => array(),
 														'long'=> array());
+			$altitude = array();
+			$airspeed = array();
 			$index = 0;
 
 			// Pull the first line
@@ -112,6 +114,7 @@ class Flight extends AppModel {
 			}
 			$latLongArray['lat'][$index] = $data[4];
 			$latLongArray['long'][$index] = $data[5];
+
 			$maxLat = $data[4];
 			$minLat = $data[4];
 			$maxLong = $data[5];
@@ -119,9 +122,12 @@ class Flight extends AppModel {
 			// While there is still data to return...
 			while($data = fgetcsv($handle)){
 				// Store that data in the array.
-				if(!empty($data[4]) && !empty($data[5]) && !ctype_space($data[4]) && !ctype_space($data[5])){
+				if(!empty($data[4]) && !empty($data[5]) &&
+					 !ctype_space($data[4]) && !ctype_space($data[5])){
 					$latLongArray['lat'][$index]  = $data[4];
 					$latLongArray['long'][$index] = $data[5];
+					$altitude[$index] = $data[8];
+					$airspeed[$index] = $data[10];
 					if($data[4] < $minLat){
 						$minLat = $data[4];
 					}
@@ -141,25 +147,48 @@ class Flight extends AppModel {
 			$center = array('lat' => ($maxLat + $minLat)/2,
 											'long' => ($maxLong + $minLong)/2);
 
-			$minMax = array('minLat' => $minLat,
-								  	  'maxLat' => $maxLat,
-								 	    'minLong' => $minLong,
-											'maxLong' => $maxLong,);
+			$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
+											'maxLong' => $maxLong, 'minLong' => $minLong);
 
 			$zoomLevel = $this->calculateZoom($minMax);
 
+			$this->makejscript($altitude, $airspeed, $latLongArray, $path);
+
 			return array('center' => $center,
-									 'latLongArray' => $latLongArray,
 									 'zoomLevel' => $zoomLevel);
 		}
 	}
 
 	private function calculateZoom($minMax){
-		$latZoom =  (int)(12 - log(($minMax['maxLat'] - $minMax['minLat'])/0.155,2));
+		$latZoom =  (int)(12 - log(($minMax['maxLat'] - $minMax['minLat'])/0.15,2));
 		$longZoom = (int)(12 - log(($minMax['maxLong'] - $minMax['minLong'])/0.22,2));
 		if($latZoom < $longZoom)
 			return $latZoom;
 		return $longZoom;
+	}
+
+	private function makejscript($altitude, $airspeed, $latLong, $path){
+		$altitudeFileName = "al" . $path . ".js";
+		$altitudeFile = new File('js' . DS . $altitudeFileName, true, 0644);
+		$altitudeFile->create();
+		$altitudeFile->write( "var altAirspeed  = [");
+
+		$latLongFile = new File('js' . DS . "latlong" . $path . ".js");
+		$latLongFile->create();
+		$latLongFile->write( "var flightCoords  = [");
+
+
+		for($i=0; $i<count($altitude); $i++){
+			if(!empty($altitude[$i]) && !empty($airspeed[$i]) && 
+				!empty($latLong['lat'][$i]) && !empty($latLong['long'][$i]) &&
+				!ctype_space($latLong['lat'][$i]) && !ctype_space($latLong['long'][$i]))
+			{
+				$altitudeFile->write( "[".$i.",".$altitude[$i].",".$airspeed[$i]."],");
+				$latLongFile->write( "new google.maps.LatLng(" . floatval($latLong['lat'][$i]) . "," . floatval($latLong['long'][$i]) . "),\n");
+			}
+		}
+		$altitudeFile->write( "];");
+		$latLongFile->write( "];");
 	}
 
 }

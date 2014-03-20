@@ -9,11 +9,13 @@ class FlightsController extends AppController {
 	}
 
 	public function add(){
+
 		if($this->request->is('post')) {
-			$this->Flight->create();
+			//$this->Flight->create();
 			if($this->Flight->save($this->request->data)) {
 				$this->Session->setFlash(__('Your post has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				//echo $this->Flight->id;
+				return $this->redirect(array('action' => 'index'/*, $this->Flight->id*/));
 			}
 			$this->Session->setFlash(__('Unable to add your post.'));
 		}
@@ -31,9 +33,11 @@ class FlightsController extends AppController {
 
 		$this->set('flight', $flight);
 		$flightInfo = $this->Flight->getLatLong($flight['Flight']['csvPath']);
+		$this->set('jspath', 'al' . $flight['Flight']['csvPath']);
+		$this->set('jslatlng', 'latlong' . $flight['Flight']['csvPath']);
 		$this->set('center', array_shift($flightInfo));
-		$this->set('latLong', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
+
 	}
 } 
 ?>
