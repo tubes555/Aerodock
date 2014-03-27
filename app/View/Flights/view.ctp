@@ -6,10 +6,10 @@
 <?php echo $this->Html->link('Back to all flights', 
       array('controller' => 'flights', 'action' => 'index'))?>
 <div class="row">
-  <div  class="col-md-6">
+  <div  class="col-md-7">
     <div id="googleMap" style="width:500px;height:380px;"></div>
   </div>
-  <div class="col-md-5">
+  <div class="col-md-4">
         <table class="table table-striped">
       <tr>
         <td id="t1">Turn One</td>
@@ -26,9 +26,10 @@
     </table>
   </div>
 </div>
+
 <div class="row">
-  <div class="col-md-11">
-    <div id="graph" style="width:1100px; height:300px;">
+  <div class="col-md-9">
+    <div id="graph" style="width:900px; height:300px;">
     </div>
   </div>
 </div>

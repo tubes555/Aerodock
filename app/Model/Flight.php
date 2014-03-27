@@ -1,9 +1,9 @@
-
 <?php
 class Flight extends AppModel {
+
 //page 317 of cakePHPCookbook
 	public $validate = array(
-	/*'studentID' => array(
+	'studentID' => array(
 		'rule' => 'notEmpty'
 		),
 	'instructorID' => array(
@@ -14,44 +14,21 @@ class Flight extends AppModel {
 		),
 	'tailNo' => array(
 		'rule' => 'notEmpty'
-		),*/
-	'csvPath' => array(
-		'extension' => array(
-			'rule'=> array('extension', array('csv')),
-			'message' => 'Only csv files',
-			),
-		'upload-file' => array(
-			'rule' => array('uploadFile'),
-			'message' => 'Error uploading file')
-		)
+		),
 	);
 
 
-	public function uploadFile( $check ) {
+	public function uploadFile( $uploadData, $id ) {
+		ClassRegistry::init('Log');
+
+		$log = new Log();
+
 		// Shifts the first item out of the array, equivalent to popping the stack
-		$uploadData = array_shift($check);
 		// Check to make sure the file has data and there are no errors from upload
 		if( $uploadData['size'] == 0 || $uploadData['error'] !== 0) {
 			return false;
 		}
-		// This is the path to store the file relative to the webroot file in the home
-		// directory. The file name will be the time stamp of when it is saved.
-		// 'DS' is directory separator '/', '.' is concat
-		$uploadFolder = 'files' . DS . 'flights';
-		$fileName = time() . '.csv';
-		$uploadPath = $uploadFolder . DS . $fileName;
-
-		// Check to see there is a file, if not make one.
-		if( !file_exists($uploadFolder) ) {
-			mkdir($uploadFolder);
-		}
-
-		// When uploaded, it is stored as tmp_name in the upload data array. This moves
-		// the csv from that array into our directory. Returns true if completed correctly
-		// and false if something went wrong. Then assign the value of the csvPath cell
-		// in the database to the path to the file.
-		if (move_uploaded_file($uploadData['tmp_name'], $uploadPath)) {
-			$this->set('csvPath', $fileName);
+		if($log->loadCSV($uploadData, $id)){
 			return true;
 		}
 
@@ -84,79 +61,80 @@ class Flight extends AppModel {
 	// Takes the file path as a parameter and returns the latitude and longitude from the
 	// csv. This method may get folded into a more efficient method that returns more values
 	// at one time. This if for front end mock up purposes.
-	public function getLatLong($path = null) {
-		if(!$path){
-			throw new NotFoundException(__('Invalid file'));
+	public function getLatLong($flight_id = null) {
+		if(!$flight_id){
+			throw new NotFoundException(__('Invalid flight'));
 		}
-		$file = new File('files'. DS . 'flights' . DS . $path, true, 0644);
-		if($file->size() == 0){
-			throw new NotFoundException(__('No such file'));
-		}
+		ClassRegistry::init('Log');
+		$log = new Log();
 
-		if($handle = fopen('files'. DS . 'flights' . DS . $path,'r')){
+		// Initialize the array that we will return as an array of arrays.
+		$latLongArray = array('lat' => array(),
+													'long'=> array());
+		$altitude = array();
+		$airspeed = array();
+		$pageNum = 1;
+		$flightInfo = $log->find('all', array(
+			'conditions' => array('Log.flight_id' => $flight_id),
+			'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS'),
+			'limit' => 1));
 
-			// Discard the first 3 lines.
-			fgetcsv($handle);
-			fgetcsv($handle);
-			fgetcsv($handle);
-			// Initialize the array that we will return as an array of arrays.
-			$latLongArray = array('lat' => array(),
-														'long'=> array());
-			$altitude = array();
-			$airspeed = array();
-			$index = 0;
+		$index = 0;
+		$latLongArray['lat'][$index] = $flightInfo[0]['Log']['Latitude'];
+		$latLongArray['long'][$index] = $flightInfo[0]['Log']['Longitude'];
+		$altitude[$index] = $flightInfo[0]['Log']['AltMSL'];
+		$airspeed[$index] = $flightInfo[0]['Log']['IAS'];
 
-			// Pull the first line
-			$data = fgetcsv($handle);
-			// Keep pulling new lines until the lat and long are not blank
-			while(ctype_space($data[4]) || ctype_space($data[5])){
-				$data = fgetcsv($handle);
-			}
-			$latLongArray['lat'][$index] = $data[4];
-			$latLongArray['long'][$index] = $data[5];
-
-			$maxLat = $data[4];
-			$minLat = $data[4];
-			$maxLong = $data[5];
-			$minLong = $data[5];
-			// While there is still data to return...
-			while($data = fgetcsv($handle)){
-				// Store that data in the array.
-				if(!empty($data[4]) && !empty($data[5]) &&
-					 !ctype_space($data[4]) && !ctype_space($data[5])){
-					$latLongArray['lat'][$index]  = $data[4];
-					$latLongArray['long'][$index] = $data[5];
-					$altitude[$index] = $data[8];
-					$airspeed[$index] = $data[10];
-					if($data[4] < $minLat){
-						$minLat = $data[4];
-					}
-					if($data[4] > $maxLat){
-						$maxLat = $data[4];
-					}				
-					if($data[5] < $minLong){
-						$minLong = $data[5];
-					}				
-					if($data[5] > $maxLong){
-						$maxLong = $data[5];
-					}
-					$index++;
+		$maxLat = $latLongArray['lat'][$index];
+		$minLat = $maxLat;
+		$maxLong = $latLongArray['long'][$index];
+		$minLong = $maxLong;
+		$index++;
+		// While there is still data to return...
+		while(count($flightInfo) != 0){
+			for($j=0; $j < count($flightInfo); $j++){
+				$latLongArray['lat'][$index]  = $flightInfo[$j]['Log']['Latitude'];
+				$latLongArray['long'][$index] = $flightInfo[$j]['Log']['Longitude'];
+				$altitude[$index] = $flightInfo[$j]['Log']['AltMSL'];
+				$airspeed[$index] = $flightInfo[$j]['Log']['IAS'];
+				if($flightInfo[$j]['Log']['Latitude'] < $minLat){
+					$minLat = $flightInfo[$j]['Log']['Latitude'];
 				}
+				if($flightInfo[$j]['Log']['Latitude'] > $maxLat){
+					$maxLat = $flightInfo[$j]['Log']['Latitude'];
+				}				
+				if($flightInfo[$j]['Log']['Longitude'] < $minLong){
+					$minLong = $flightInfo[$j]['Log']['Longitude'];
+				}				
+				if($flightInfo[$j]['Log']['Longitude'] > $maxLong){
+					$maxLong = $flightInfo[$j]['Log']['Longitude'];
+				}
+				$index++;
+			
 			}
-
-			$center = array('lat' => ($maxLat + $minLat)/2,
-											'long' => ($maxLong + $minLong)/2);
-
-			$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
-											'maxLong' => $maxLong, 'minLong' => $minLong);
-
-			$zoomLevel = $this->calculateZoom($minMax);
-
-			$this->makejscript($altitude, $airspeed, $latLongArray, $path);
-
-			return array('center' => $center,
-									 'zoomLevel' => $zoomLevel);
+			$pageNum++;
+			$flightInfo = $log->find('all', array(
+				'conditions' => array('Log.flight_id' => $flight_id),
+				'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS'),
+				'limit' => 500,
+				'page' => $pageNum));
 		}
+
+		// Store that data in the array.
+
+		$center = array('lat' => ($maxLat + $minLat)/2,
+										'long' => ($maxLong + $minLong)/2);
+
+		$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
+										'maxLong' => $maxLong, 'minLong' => $minLong);
+
+		$zoomLevel = $this->calculateZoom($minMax);
+
+		$this->makejscript($altitude, $airspeed, $latLongArray, $flight_id);
+
+		return array('center' => $center,
+								 'zoomLevel' => $zoomLevel);
+
 	}
 
 	private function calculateZoom($minMax){
@@ -192,5 +170,3 @@ class Flight extends AppModel {
 	}
 
 }
-
-?>

@@ -1,0 +1,110 @@
+-- phpMyAdmin SQL Dump
+-- version 4.0.6
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Mar 27, 2014 at 10:55 PM
+-- Server version: 5.5.33
+-- PHP Version: 5.5.3
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- 
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `flights`
+--
+
+CREATE TABLE `flights` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `studentID` varchar(32) NOT NULL,
+  `instructorID` varchar(32) NOT NULL,
+  `aircraft` varchar(32) NOT NULL,
+  `tailNo` varchar(32) NOT NULL,
+  `date` datetime NOT NULL,
+  `comments` text NOT NULL,
+  `maintenance` tinyint(1) NOT NULL,
+  `csvPath` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `LclDate` varchar(10) NOT NULL,
+  `LclTime` varchar(8) NOT NULL,
+  `UTCOfst` varchar(8) DEFAULT NULL,
+  `AtvWpt` varchar(7) DEFAULT NULL,
+  `Latitude` decimal(9,7) DEFAULT NULL,
+  `Longitude` decimal(10,7) DEFAULT NULL,
+  `AltB` int(5) DEFAULT NULL,
+  `BaroA` decimal(4,2) DEFAULT NULL,
+  `AltMSL` varchar(8) DEFAULT NULL,
+  `OAT` varchar(6) DEFAULT NULL,
+  `IAS` int(3) DEFAULT NULL,
+  `GndSpd` int(3) DEFAULT NULL,
+  `VSpd` varchar(8) DEFAULT NULL,
+  `Pitch` varchar(7) DEFAULT NULL,
+  `Roll` varchar(7) DEFAULT NULL,
+  `LatAc` varchar(7) DEFAULT NULL,
+  `NormAc` varchar(7) DEFAULT NULL,
+  `HDG` int(3) DEFAULT NULL,
+  `TRK` int(3) DEFAULT NULL,
+  `volt1` decimal(5,1) DEFAULT NULL,
+  `FQtyL` decimal(6,2) DEFAULT NULL,
+  `FQtyR` decimal(6,2) DEFAULT NULL,
+  `FFlow` decimal(8,2) DEFAULT NULL,
+  `FPres` decimal(8,2) DEFAULT NULL,
+  `OilT` decimal(7,2) DEFAULT NULL,
+  `OilP` decimal(7,2) DEFAULT NULL,
+  `MAP` decimal(6,2) DEFAULT NULL,
+  `RPM` decimal(6,1) DEFAULT NULL,
+  `CHT1` decimal(7,2) DEFAULT NULL,
+  `CHT2` decimal(7,2) DEFAULT NULL,
+  `CHT3` decimal(7,2) DEFAULT NULL,
+  `CHT4` decimal(7,2) DEFAULT NULL,
+  `EGT1` decimal(7,2) DEFAULT NULL,
+  `EGT2` decimal(7,2) DEFAULT NULL,
+  `EGT3` decimal(7,2) DEFAULT NULL,
+  `EGT4` decimal(7,2) DEFAULT NULL,
+  `AltGPS` varchar(8) DEFAULT NULL,
+  `TAS` varchar(4) DEFAULT NULL,
+  `HSIS` varchar(5) DEFAULT NULL,
+  `CRS` decimal(6,1) DEFAULT NULL,
+  `NAV1` decimal(6,2) DEFAULT NULL,
+  `NAV2` decimal(6,2) DEFAULT NULL,
+  `COM1` decimal(7,3) DEFAULT NULL,
+  `COM2` decimal(7,3) DEFAULT NULL,
+  `HCDI` varchar(7) DEFAULT NULL,
+  `VCDI` varchar(7) DEFAULT NULL,
+  `WndSpd` varchar(7) DEFAULT NULL,
+  `WndDr` varchar(6) DEFAULT NULL,
+  `WptDst` varchar(7) DEFAULT NULL,
+  `WptBrg` varchar(7) DEFAULT NULL,
+  `MagVar` decimal(6,1) DEFAULT NULL,
+  `AfcsOn` int(7) DEFAULT NULL,
+  `RollM` varchar(6) DEFAULT NULL,
+  `PitchM` varchar(7) DEFAULT NULL,
+  `RollC` varchar(6) DEFAULT NULL,
+  `PichC` varchar(6) DEFAULT NULL,
+  `VSpdG` varchar(6) DEFAULT NULL,
+  `GPSfix` varchar(7) DEFAULT NULL,
+  `HAL` int(5) DEFAULT NULL,
+  `VAL` varchar(6) DEFAULT NULL,
+  `HPLwas` varchar(7) DEFAULT NULL,
+  `HPLfd` varchar(6) DEFAULT NULL,
+  `VPLwas` varchar(7) DEFAULT NULL,
+  `flight_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `Key` (`flight_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

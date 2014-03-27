@@ -1,5 +1,4 @@
 <?php
-
 class FlightsController extends AppController {
 	public $helpers = array('Html', 'Form', 'Session');
 	public $components = array('Session');
@@ -11,11 +10,16 @@ class FlightsController extends AppController {
 	public function add(){
 
 		if($this->request->is('post')) {
-			//$this->Flight->create();
-			if($this->Flight->save($this->request->data)) {
+			$this->Flight->create();
+			$data = $this->request->data;
+			$csvData = $data['Flight']['csvPath'];
+			unset($data['Flight']['csvPath']);
+			if($this->Flight->save($data)) {
+				$this->Flight->uploadFile($csvData, $this->Flight->id);
 				$this->Session->setFlash(__('Your post has been saved.'));
-				//echo $this->Flight->id;
-				return $this->redirect(array('action' => 'index'/*, $this->Flight->id*/));
+				return $this->redirect(
+					array('controller' => 'flights', 'action' => 'view', $this->Flight->id)
+					);
 			}
 			$this->Session->setFlash(__('Unable to add your post.'));
 		}
@@ -32,12 +36,11 @@ class FlightsController extends AppController {
 		}
 
 		$this->set('flight', $flight);
-		$flightInfo = $this->Flight->getLatLong($flight['Flight']['csvPath']);
-		$this->set('jspath', 'al' . $flight['Flight']['csvPath']);
-		$this->set('jslatlng', 'latlong' . $flight['Flight']['csvPath']);
+		$flightInfo = $this->Flight->getLatLong($flight['Flight']['id']);
+		$this->set('jspath', 'al' . $flight['Flight']['id']);
+		$this->set('jslatlng', 'latlong' . $flight['Flight']['id']);
 		$this->set('center', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
 
 	}
 } 
-?>

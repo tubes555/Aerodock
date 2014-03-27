@@ -1,6 +1,6 @@
 <h1>Add new flight:</h1>
 
-<?php 
+<?php
 echo $this->Form->create('Flight', array('type' => 'file'));
 echo $this->Form->input('studentID');
 echo $this->Form->input('instructorID');
