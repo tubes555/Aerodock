@@ -1,4 +1,6 @@
 
+<?php $this->Html->css('viewTemplate', array('inline' => false));?>
+
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
 
 
@@ -26,7 +28,13 @@
     </table>
   </div>
 </div>
-
+<div class="row text-center graph-selector">
+  <div class="btn-group">
+    <button type="button" class="btn btn-default" id="Airspeed">Airspeed</button>
+    <button type="button" class="btn btn-default" id="Engine">Engine Block</button>
+    <button type="button" class="btn btn-default" id="Other">Other Stuff</button>
+  </div>
+</div>
 <div class="row">
   <div class="col-md-9">
     <div id="graph" style="width:900px; height:300px;">
@@ -45,11 +53,11 @@
     mapProp = {
       center: new google.maps.LatLng(<?php echo $center['lat']; ?>, <?php echo $center['long'];?>),
       zoom: <?php echo $zoomLevel ?>,
+      scrollwheel: false,
       mapTypeId:google.maps.MapTypeId.ROADMAP
     };
 
-    map=new google.maps.Map(document.getElementById("googleMap")
-    ,mapProp);
+    map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
     var flightPath = new google.maps.Polyline({
       path: flightCoords,
       geodesic: true,
@@ -61,6 +69,7 @@
     flightPath.setMap(map);
     
   }
+
   google.maps.event.addDomListener(window, 'load', initialize);
 
   g3 = new Dygraph(
@@ -73,5 +82,40 @@
       }
     }
   );
+
+  function changeGraph(eventObject, argumentsObject)
+  {
+    if(eventObject.srcElement.id == "Airspeed"){
+      g3 = new Dygraph(
+        document.getElementById("graph"),
+          altAirspeed,
+        {
+          labels: [ "x", "altitude", "airspeed" ],
+          airspeed : {
+            axis : {}
+          }
+        }
+        );
+    }
+    if(eventObject.srcElement.id == "Engine"){
+      g3 = new Dygraph(
+        document.getElementById("graph"),
+          engine,
+        {
+          labels: [ "x", "Temp", "RPM" ],
+          RPM : {
+            axis : {}
+          }
+        }
+        );
+    }
+  }
+
+  var AirspeedButton = document.getElementById("Airspeed");
+  var EngineButton = document.getElementById("Engine");
+  var OtherButton = document.getElementById("Other");
+  AirspeedButton.addEventListener("click", changeGraph);
+  EngineButton.addEventListener("click", changeGraph);
+  OtherButton.addEventListener("click", changeGraph);
 </script>
 
