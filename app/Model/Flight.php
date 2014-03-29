@@ -152,7 +152,7 @@ class Flight extends AppModel {
 														floatval($latLongArray['lat'][$i]) . "," . 
 														floatval($latLongArray['long'][$i]) . "),");
 			$engineString .= "[".$i.",".$engineTemp[$i].",".$engineRPM[$i]."],";
-			$trackingString .= "[".$i.",".$engineTemp[$i]."],";
+			$trackingString .= "[".$i.",".$tracking[$i]."],";
 		}
 		$altitudeFile->write( "];");
 		$latLongFile->write( "];");
