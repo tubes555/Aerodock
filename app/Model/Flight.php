@@ -26,6 +26,7 @@ class Flight extends AppModel {
 		if( $uploadData['size'] == 0 || $uploadData['error'] !== 0) {
 			return false;
 		}
+		
 		if($log->loadCSV($uploadData, $id)){
 			return true;
 		}

@@ -8,14 +8,19 @@ class FlightsController extends AppController {
 	}
 
 	public function add(){
-
+		$timefile = new File('timeController', true, 0644);
+		$timefile->create();
 		if($this->request->is('post')) {
 			$this->Flight->create();
 			$data = $this->request->data;
 			$csvData = $data['Flight']['csvPath'];
 			unset($data['Flight']['csvPath']);
 			if($this->Flight->save($data)) {
+				$pre = microtime(true);
 				$this->Flight->uploadFile($csvData, $this->Flight->id);
+				$post = microtime(true);
+				
+				$timefile->write($post-$pre."\n");
 				$this->Session->setFlash(__('Your post has been saved.'));
 				return $this->redirect(
 					array('controller' => 'flights', 'action' => 'view', $this->Flight->id)
