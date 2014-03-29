@@ -32,7 +32,7 @@
   <div class="btn-group">
     <button type="button" class="btn btn-default" id="Airspeed">Airspeed</button>
     <button type="button" class="btn btn-default" id="Engine">Engine Block</button>
-    <button type="button" class="btn btn-default" id="Other">Other Stuff</button>
+    <button type="button" class="btn btn-default" id="Tracking">Tracking</button>
   </div>
 </div>
 <div class="row">
@@ -109,13 +109,22 @@
         }
         );
     }
+    if(eventObject.srcElement.id == "Tracking"){
+      g3 = new Dygraph(
+        document.getElementById("graph"),
+          tracking,
+          {
+            labels: [ "x", "Degrees" ]
+          }
+        );
+    }
   }
 
   var AirspeedButton = document.getElementById("Airspeed");
   var EngineButton = document.getElementById("Engine");
-  var OtherButton = document.getElementById("Other");
+  var TrackingButton = document.getElementById("Tracking");
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);
-  OtherButton.addEventListener("click", changeGraph);
+  TrackingButton.addEventListener("click", changeGraph);
 </script>
 

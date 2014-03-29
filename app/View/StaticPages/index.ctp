@@ -10,8 +10,20 @@
 
 
       <div class="jumbotron">
-        <h1>Jumbotron heading</h1>
-        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
+        <h1>Aerodock<br>
+        <small>MTSU Aerospace Student Flight Tracking</small></h1>
+        <p><?php echo $this->Html->link('Sign in using your Pipeline ID and password',
+        																array(
+        																		'controller' => 'users',
+        																		'action' => 'login'),
+        																		array('class' => 'btn btn-lg btn-success',
+        																				  'role' => 'button'));?>
       </div>
 
+
+      <div class="row marketing">
+        <div class="col-md-6">
+          <h4>Logging in</h4>
+          <p>Aerodock requires the user to be enrolled in an MTSU Aerospace class to gain access. If you are a student, use your Pipeline ID and password to log in. If you are still unable to log in, contact your teacher to resolve the issue.</p>
+        </div>
+      </div>
