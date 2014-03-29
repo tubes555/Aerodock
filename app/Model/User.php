@@ -50,7 +50,6 @@ class User extends AppModel {
             );
         } else {
             $this->request->data = $this->User->read(null, $id);
-            unset($this->request->data['User']['password']);
         }
     }
 
@@ -68,5 +67,4 @@ class User extends AppModel {
         $this->Session->setFlash(__('User was not deleted'));
         return $this->redirect(array('action' => 'index'));
     }
-
 }

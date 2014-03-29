@@ -53,10 +53,11 @@ class Flight extends AppModel {
 		$engineRPM = array();
 		$engineTemp = array();
 		$tracking = array();
+		$timestamp = array();
 		$pageNum = 1;
 		$flightInfo = $log->find('all', array(
 			'conditions' => array('Log.flight_id' => $flight_id),
-			'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK'),
+			'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK','Time'),
 			'limit' => 1));
 
 		$index = 0;
@@ -68,11 +69,12 @@ class Flight extends AppModel {
 		$engineTemp[$index] = $flightInfo[0]['Log']['RPM'];
 		$tracking[$index] = $flightInfo[0]['Log']['TRK'];
 
+		$timestamp[$index] = $flightInfo[0]['Log']['Time'];
 		$maxLat = $latLongArray['lat'][$index];
 		$minLat = $maxLat;
 		$maxLong = $latLongArray['long'][$index];
 		$minLong = $maxLong;
-		$index++;
+
 		// While there is still data to return...
 		while(count($flightInfo) != 0){
 			for($j=0; $j < count($flightInfo); $j++){
@@ -82,7 +84,8 @@ class Flight extends AppModel {
 				$airspeed[$index]   = $flightInfo[$j]['Log']['IAS'];
 				$engineRPM[$index]  = $flightInfo[$j]['Log']['CHT1'];
 				$engineTemp[$index] = $flightInfo[$j]['Log']['RPM'];
-				$tracking[$index] = $flightInfo[$j]['Log']['TRK'];
+				$tracking[$index]   = $flightInfo[$j]['Log']['TRK'];
+				$timestamp[$index]  = $flightInfo[$j]['Log']['Time'];
 				if($flightInfo[$j]['Log']['Latitude'] < $minLat){
 					$minLat = $flightInfo[$j]['Log']['Latitude'];
 				}
@@ -98,12 +101,12 @@ class Flight extends AppModel {
 				$index++;
 			
 			}
-			$pageNum++;
 			$flightInfo = $log->find('all', array(
 				'conditions' => array('Log.flight_id' => $flight_id),
-				'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK'),
+				'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK','Time'),
 				'limit' => 500,
 				'page' => $pageNum));
+			$pageNum++;
 		}
 
 		// Store that data in the array.
@@ -113,14 +116,13 @@ class Flight extends AppModel {
 
 		$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
 										'maxLong' => $maxLong, 'minLong' => $minLong);
-
+		//pr($timestamp);
 		$zoomLevel = $this->calculateZoom($minMax);
-
-		$this->makejscript($altitude, $airspeed, $latLongArray, $engineTemp, $engineRPM, $flight_id, $tracking);
+		$this->makejscript($altitude, $airspeed, $latLongArray,
+											 $engineTemp, $engineRPM, $flight_id, 
+											 $tracking, $timestamp);
 		return array('center' => $center,
-								 'zoomLevel' => $zoomLevel,
-								 'engineTemp' => $engineTemp,
-								 'engineRPM' => $engineRPM);
+								 'zoomLevel' => $zoomLevel);
 
 	}
 
@@ -132,14 +134,16 @@ class Flight extends AppModel {
 		return $longZoom;
 	}
 
-	private function makejscript($altitude, $airspeed, $latLongArray, $engineTemp, $engineRPM, $flight_id, $tracking){
+	private function makejscript($altitude, $airspeed, $latLongArray,
+															 $engineTemp, $engineRPM, $flight_id, 
+															 $tracking, $timestamp){
 
 		$altitudeFileName = "al" . $flight_id . ".js";
-		$altitudeFile = new File('js' . DS . $altitudeFileName, true, 0644);
+		$altitudeFile = new File('js' . DS . 'Flightjs'. DS. $altitudeFileName, true, 0644);
 		$altitudeFile->create();
 		$altitudeFile->write( "var altAirspeed  = [");
 
-		$latLongFile = new File('js' . DS . "latlong" . $flight_id . ".js");
+		$latLongFile = new File('js' . DS .'Flightjs'. DS. "latlong" . $flight_id . ".js");
 		$latLongFile->create();
 		$latLongFile->write( "var flightCoords  = [");
 

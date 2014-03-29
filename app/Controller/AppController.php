@@ -41,5 +41,27 @@ class AppController extends Controller {
 		'Paginator' => array('className' => 'BoostCake.BoostCakePaginator'),
 	);
 
+	public $components = array(
+    'Session',
+    'Auth' => array(
+        'loginRedirect' => array('controller' => 'flights', 'action' => 'index'),
+        'logoutRedirect' => array(
+            'controller' => 'staticPages',
+            'action' => 'index'
+        ),
+        'authorize' => array('Controller') 
+	    )
+	);
+
+	public function isAuthorized($user, $id = NULL) {
+	    // Admin can access every action
+	    if (isset($user['type'])/* && $user['type'] === 'admin'*/) {
+	        return true;
+	    }
+
+	    // Default deny
+	    return false;
+	}
+
 }
 ?>

@@ -12,6 +12,9 @@ class Log extends AppModel {
 				if(substr($header[$i], 2,1) == " "){
 					$header[$i] = substr($header[$i], 3);
 				};
+				if(substr($header[$i], 3,1) == " "){
+					$header[$i] = substr($header[$i], 4);
+				};
 		}
 		$numItems = count($header);
 		$index = 0;
