@@ -116,7 +116,7 @@ class Flight extends AppModel {
 
 		$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
 										'maxLong' => $maxLong, 'minLong' => $minLong);
-		//pr($timestamp);
+		//pr($airspeed);
 		$zoomLevel = $this->calculateZoom($minMax);
 		$this->makejscript($altitude, $airspeed, $latLongArray,
 											 $engineTemp, $engineRPM, $flight_id, 
@@ -149,14 +149,25 @@ class Flight extends AppModel {
 
 		$engineString = "var engine = [";
 		$trackingString = "var tracking = [";
-
 		for($i=0; $i<count($altitude); $i++){
-			$altitudeFile->write( "[".$i.",".$altitude[$i].",".$airspeed[$i]."],");
+			$altitudeFile->write( "[new Date(2013,0,0,".
+														substr($timestamp[$i], 0,2).",".
+														substr($timestamp[$i], 3,2).",".
+														substr($timestamp[$i], 6,2).",0),".
+														$altitude[$i].",".$airspeed[$i]."],");
 			$latLongFile->write( "new google.maps.LatLng(" . 
 														floatval($latLongArray['lat'][$i]) . "," . 
 														floatval($latLongArray['long'][$i]) . "),");
-			$engineString .= "[".$i.",".$engineTemp[$i].",".$engineRPM[$i]."],";
-			$trackingString .= "[".$i.",".$tracking[$i]."],";
+			$engineString .= "[new Date(2013,0,0,".
+														substr($timestamp[$i], 0,2).",".
+														substr($timestamp[$i], 3,2).",".
+														substr($timestamp[$i], 6,2).",0),".
+														$engineTemp[$i].",".$engineRPM[$i]."],";
+			$trackingString .= "[new Date(2013,0,0,".
+														substr($timestamp[$i], 0,2).",".
+														substr($timestamp[$i], 3,2).",".
+														substr($timestamp[$i], 6,2).",0),".
+														$tracking[$i]."],";
 		}
 		$altitudeFile->write( "];");
 		$latLongFile->write( "];");

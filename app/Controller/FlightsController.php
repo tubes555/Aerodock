@@ -2,6 +2,10 @@
 class FlightsController extends AppController {
 	public $helpers = array('Html', 'Form', 'Session');
 	public $components = array('Session');
+	
+	public function beforeFilter() {
+	    parent::beforeFilter();
+	}
 
 	public function index(){
 		$user = $this->Auth->user();
@@ -32,21 +36,18 @@ class FlightsController extends AppController {
 	}
 
 	public function view($id = null) {
-		$user = $this->Auth->user();
-		if(!$this->isAuthorized($user, $id)){
+		if(!$id) {
+			throw new NotFoundException(__('Invalid flight'));
+		}		
+		$flight = $this->Flight->findById($id);	
+		if(!$flight){
+			throw new NotFoundException(__('Invalid flight'));
+		}	
+		if($flight['Flight']['studentid'] != $this->Auth->user('username') && 
+				$this->Auth->user('type') == 'student' ){
 			$this->Session->setFlash(__('Not authorized to view this flight.'));
 			return $this->redirect(
 					array('controller' => 'flights', 'action' => 'index'));
-		}
-
-		if(!$id) {
-			throw new NotFoundException(__('Invalid flight'));
-		}
-
-
-		$flight = $this->Flight->findById($id);
-		if(!$flight){
-			throw new NotFoundException(__('Invalid flight'));
 		}
 
 		$this->set('flight', $flight);
@@ -58,16 +59,13 @@ class FlightsController extends AppController {
 
 	}
 
-
-	public function isAuthorized($user, $id = NULL) {
-		if($id){
-			$flight = $this->Flight->findById($id);
-	    if ($flight['Flight']['studentid'] != $user['username'] &&
-	    		$user['type'] == "student"){
-	    	return false;
+	public function isAuthorized($user) {
+	    // Admin can access every action
+	    if ($user) {
+	        return true;
 	    }
-	    return true;
-	  } else
-	  return parent::isAuthorized($user);
+
+	    // Default deny
+	    return false;
 	}
 } 

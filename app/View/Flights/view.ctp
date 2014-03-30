@@ -1,12 +1,6 @@
-
 <?php $this->Html->css('viewTemplate', array('inline' => false));?>
 
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
-
-
-<h1>Flight <?php echo $flight['Flight']['id'] ?></h1>
-<?php echo $this->Html->link('Back to all flights', 
-      array('controller' => 'flights', 'action' => 'index'))?>
 <div class="row">
   <div  class="col-md-7">
     <div id="googleMap" style="width:500px;height:380px;"></div>
@@ -102,7 +96,7 @@
         document.getElementById("graph"),
           engine,
         {
-          labels: [ "x", "Temp", "RPM" ],
+          labels: [ "Time", "Temp", "RPM" ],
           RPM : {
             axis : {}
           }
@@ -114,7 +108,7 @@
         document.getElementById("graph"),
           tracking,
           {
-            labels: [ "x", "Degrees" ]
+            labels: [ "Time", "Degrees" ]
           }
         );
     }

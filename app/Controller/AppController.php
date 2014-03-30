@@ -52,15 +52,29 @@ class AppController extends Controller {
         'authorize' => array('Controller') 
 	    )
 	);
+	public function beforeFilter() {
+    parent::beforeFilter();
+    // Allow users to register and logout.
+    $this->Auth->allow('login', 'logout','home');
+	}
 
-	public function isAuthorized($user, $id = NULL) {
+	
+
+	public function isAuthorized($user) {
 	    // Admin can access every action
-	    if (isset($user['type'])/* && $user['type'] === 'admin'*/) {
+	    if (isset($user['type']) && $user['type'] === 'admin') {
 	        return true;
 	    }
 
 	    // Default deny
 	    return false;
+	}
+
+	public function loggedIn(){
+		if($this->Auth->user){
+			return true;
+		}
+		return false;
 	}
 
 }
