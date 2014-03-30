@@ -120,5 +120,66 @@
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);
   TrackingButton.addEventListener("click", changeGraph);
+/*
+  var boxBound = new google.maps.LatLngBounds(
+    new google.maps.LatLng(35.6556-0.001,-86.2666-0.007),
+        new google.maps.LatLng(35.6597+0.001,-86.2725+0.007));
+  var rectangle1 = new google.maps.Rectangle({
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.2,
+      map: map,
+      bounds : boxBound
+  });
+
+  var boxBound = new google.maps.LatLngBounds(
+    new google.maps.LatLng(35.6405-0.001,-86.268-0.007),
+        new google.maps.LatLng(35.6463+0.001,-86.2751+0.007));
+  var rectangle2 = new google.maps.Rectangle({
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.2,
+      map: map,
+      bounds : boxBound
+  });
+
+  var boxBound = new google.maps.LatLngBounds(
+    new google.maps.LatLng(35.6141-0.001,-86.2616-0.007),
+        new google.maps.LatLng(35.6188+0.001,-86.2679+0.007));
+  var rectangle3 = new google.maps.Rectangle({
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.2,
+      map: map,
+      bounds : boxBound
+  });
+  var rectangle = [];
+  rectangle[0] = rectangle1;
+  rectangle[1] = rectangle2;
+  rectangle[2] = rectangle3;
+
+  function changeT(){
+    var turn = Number(this.id[1])-1;
+    for (var i = 0; i < 3; i++) {
+      if(i != turn){
+        rectangle[i].setMap(null);
+      }
+      rectangle[turn].setMap(map);
+    }
+  }
+
+  t1.addEventListener("mouseover", changeT);
+  t2.addEventListener("mouseover", changeT);
+  t3.addEventListener("mouseover", changeT);
+  t1.addEventListener("mouseleave", changeT);
+  t2.addEventListener("mouseout", changeT);
+  t3.addEventListener("mouseout", changeT);
+  */
 </script>
 

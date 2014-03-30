@@ -156,8 +156,8 @@ class Flight extends AppModel {
 														substr($timestamp[$i], 6,2).",0),".
 														$altitude[$i].",".$airspeed[$i]."],");
 			$latLongFile->write( "new google.maps.LatLng(" . 
-														floatval($latLongArray['lat'][$i]) . "," . 
-														floatval($latLongArray['long'][$i]) . "),");
+														$latLongArray['lat'][$i] . "," . 
+														$latLongArray['long'][$i] . "),");
 			$engineString .= "[new Date(2013,0,0,".
 														substr($timestamp[$i], 0,2).",".
 														substr($timestamp[$i], 3,2).",".

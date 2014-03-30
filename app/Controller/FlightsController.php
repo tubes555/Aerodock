@@ -25,7 +25,6 @@ class FlightsController extends AppController {
 			unset($data['Flight']['csvPath']);
 			if($this->Flight->save($data)) {
 				$this->Flight->uploadFile($csvData, $this->Flight->id);
-				
 				$this->Session->setFlash(__('Your post has been saved.'));
 				return $this->redirect(
 					array('controller' => 'flights', 'action' => 'view', $this->Flight->id)

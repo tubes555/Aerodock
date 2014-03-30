@@ -40,7 +40,7 @@
 		    <div class="navbar-header">
 		    	<?php echo $this->Html->link('Aerodock',
 		        																	array('controller' => 'staticPages',
-		        																	 'action' => 'index'),
+		        																	 			 'action' => 'index'),
 		        																	array('class' => 'navbar-brand'));?>
 		      <?php if(AuthComponent::user('id')):?>
 		      <ul class="nav navbar-nav">
