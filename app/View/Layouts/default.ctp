@@ -53,12 +53,12 @@
 		        																		AuthComponent::user('id')));?></li>
 		        <?php if(AuthComponent::user('type') == 'admin'):?>
 		          <li><?php echo $this->Html->link('Users list',
-		  																	array('controller' => 'user',
+		  																	array('controller' => 'users',
 		  																		'action' => 'index'));?></li>
 		  			<?php endif ?>
 		  			<?php if(AuthComponent::user('type') == 'teacher'):?>
 		          <li><?php echo $this->Html->link('Student list',
-		  																	array('controller' => 'user',
+		  																	array('controller' => 'users',
 		  																		'action' => 'index'));?></li>
 		  			<?php endif ?>
 		  			<?php if(AuthComponent::user('type') == 'maint' || 

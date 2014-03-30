@@ -1,4 +1,4 @@
-<h1><?php echo $user['firstname']?> <?php echo $user['lastname'];?></h1>
+<h1><?php echo $user['User']['firstname']?> <?php echo $user['User']['lastname'];?></h1>
 <br>
 <p>Update your information here</p>
 
@@ -6,9 +6,9 @@
 																'inputDefaluts' => array(
 																	'div' => 'form-group',
 																	'class' => 'form-control')));
-			echo $this->Form->input('firstname',array('value' => $user['firstname']));
-			echo $this->Form->input('lastname' ,array('value' => $user['lastname']));
-			if($user['type'] == 'admin'){
+			echo $this->Form->input('firstname',array('value' => $user['User']['firstname']));
+			echo $this->Form->input('lastname' ,array('value' => $user['User']['lastname']));
+			if(Authcomponent::user('type')== 'admin'){
 			echo $this->Form->input('type', array(
 															'options' => array(
 																'Student', 'Teacher', 'Maintenance', 'Administrator'),

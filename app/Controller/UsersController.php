@@ -76,8 +76,8 @@ class UsersController extends AppController {
           __('The user could not be saved. Please, try again.')
       );
     } else {
-      $this->request->data = $this->User->findById($id);
-      $user = $this->Auth->user();
+      $user = $this->User->findById($id);
+      $this->request->data = $user;
       if(!$id) {
         throw new NotFoundException(__('Invalid user'));
       }
@@ -86,22 +86,34 @@ class UsersController extends AppController {
         return $this->redirect(
             array('controller' => 'users', 'action' => 'login'));
       }
-      if($user['id'] != $id && $user['type'] == 'student'){
+      if($this->Auth->user('id') != $id && $this->Auth->user('type') == 'student'){
         $this->Session->setFlash(__('Not authorized to view this user page.'));
         return $this->redirect(
             array('controller' => 'flights', 'action' => 'index'));
       }
       $this->set('user', $user);
 
-      if($user['type'] == 'student'){
+      if($user['User']['type'] == 'student'){
         $this->set('type', 0);
-      } else if($user['type'] == 'teacher'){
+      } else if($user['User']['type'] == 'teacher'){
         $this->set('type', 1);
-      } else if($user['type'] == "maint"){
+      } else if($user['User']['type'] == "maint"){
         $this->set('type', 2);
-      } else if($user['type'] == 'admin'){
+      } else if($user['User']['type'] == 'admin'){
         $this->set('type', 3);
       }
+    }
+  }
+
+  public function index(){
+    if($this->Auth->user('type') == 'admin'){
+      $this->set('users', $this->User->find('all'));
+    } else if($this->Auth->user('type') == 'teacher'){
+      $this->set('users', $this->User->findAllByType('student'));
+    } else {
+      $this->Session->setFlash(__('Not authorized to view this user page.'));
+       return $this->redirect(
+            array('controller' => 'flights', 'action' => 'index'));
     }
   }
 
