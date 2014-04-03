@@ -42,6 +42,8 @@
 		        																	array('controller' => 'staticPages',
 		        																	 			 'action' => 'index'),
 		        																	array('class' => 'navbar-brand'));?>
+		    </div>
+		    <div class="navbar-right">
 		      <?php if(AuthComponent::user('id')):?>
 		      <ul class="nav navbar-nav">
 		        <li><?php echo $this->Html->link('Flight List',
@@ -93,7 +95,7 @@
 				    																			 'class' => 'btn btn-success'));?>
 						<?php echo $this->Form->end(); ?>
 	      	<?php endif ?>
-	    	</div>
+	      </div>
 	  	</div>
 		</div>
 		<div class="container">

@@ -167,7 +167,7 @@ class Flight extends AppModel {
 														substr($timestamp[$i], 0,2).",".
 														substr($timestamp[$i], 3,2).",".
 														substr($timestamp[$i], 6,2).",0),".
-														$tracking[$i]."],";
+														$tracking[$i]."],\n";
 		}
 		$altitudeFile->write( "];");
 		$latLongFile->write( "];");

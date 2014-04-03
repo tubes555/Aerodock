@@ -1,24 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 4.0.6
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Mar 30, 2014 at 11:41 PM
--- Server version: 5.5.33
--- PHP Version: 5.5.3
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
---
--- Database: `blogtutorial`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `flights`
---
 
 CREATE TABLE `flights` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -32,12 +15,6 @@ CREATE TABLE `flights` (
   `csvPath` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `logs`
---
 
 CREATE TABLE `logs` (
   `Time` time NOT NULL,
@@ -77,11 +54,6 @@ CREATE TABLE `logs` (
   KEY `Key` (`flight_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
 
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -94,9 +66,6 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
---
--- Dumping data for table `users`
---
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `type`, `created`, `modified`) VALUES
 (1, 'Maint Man', 'Mr. Fixer', 'maintenance', 'maint', '2014-03-29 16:18:05', '2014-03-30 11:12:22'),

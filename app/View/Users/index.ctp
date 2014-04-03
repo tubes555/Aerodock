@@ -20,6 +20,7 @@
 	</tr>
 	<?php foreach ($users as $user): ?>
 	<tr>
+		<?php pr($user); ?>
 		<td><?php echo $user['User']['firstname']; ?></td>
 		<td><?php echo $user['User']['lastname']; ?></td>
 		<td><?php echo $user['User']['username']; ?></td>
