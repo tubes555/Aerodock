@@ -24,8 +24,13 @@ class FlightsController extends AppController {
 			$csvData = $data['Flight']['csvPath'];
 			unset($data['Flight']['csvPath']);
 			$this->Flight->set('instructorID', $this->Auth->user('username'));
+
 			if($this->Flight->save($data)) {
-				$this->Flight->uploadFile($csvData, $this->Flight->id);
+
+				$loadCSVArray = $this->Flight->uploadFile($csvData, $this->Flight->id);
+				$this->Flight->set('duration', $loadCSVArray['duration']);
+				$this->Flight->save();
+
 				$this->Session->setFlash(__('Your post has been saved.'));
 				return $this->redirect(
 					array('controller' => 'flights', 'action' => 'view', $this->Flight->id)
