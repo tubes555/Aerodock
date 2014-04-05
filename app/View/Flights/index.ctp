@@ -20,7 +20,15 @@
 		<td><?php echo $this->Html->link(
 			'View Flight',
 			array('controller' => 'flights', 'action' => 'view', $flight['Flight']['id']));
-			?></td>
+			?>
+		</td>
+		<td><?php echo $this->Form->postLink(
+			'Delete Flight',
+			array('action' => 'delete', $flight['Flight']['id'] ),
+			array('confirm' => 'Are you sure?')
+			);
+			?>
+		</td>	
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($flight); ?>

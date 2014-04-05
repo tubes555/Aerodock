@@ -59,6 +59,37 @@ class FlightsController extends AppController {
 
 	}
 
+	
+	public function delete($id)
+	{
+		if( $this->request->is('get') )
+		{
+			throw new MethodNotAllowedException();
+		}
+		
+		if($this->Auth->user('type') == 'admin')
+		{
+			if($this->Flight->delete($id))
+			{
+				$this->Session->setFlash(
+					__('The Flight indexed %s has been deleted', $id ));
+			}
+			else
+			{
+				$this->Session->setFlash(
+					__('Attempt to delete flight %s failed.', $id));
+			}
+		} 	
+		else
+		{
+			$this->Session->SetFlash(
+				__('Only an Administrator may delete flights.'));
+
+		}
+		return $this->redirect(array('contoller' => 'flights', 'action' => 'index'));
+
+	}
+
 	public function isAuthorized($user) {
 	    // Admin can access every action
 	    if ($user) {
