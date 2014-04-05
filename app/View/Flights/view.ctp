@@ -1,5 +1,6 @@
 <?php $this->Html->css('viewTemplate', array('inline' => false));?>
 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
 <div class="row">
   <div  class="col-md-7">
@@ -31,7 +32,7 @@
 </div>
 <div class="row">
   <div class="col-md-9">
-    <div id="graph" style="width:900px; height:300px;">
+    <div id="chart_div" style="width:400; height:300"></div>
     </div>
   </div>
 </div>
@@ -64,59 +65,96 @@
     
   }
 
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1.0', {'packages':['corechart']});
+  
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.setOnLoadCallback(drawChart);
+
+
+  // Callback that creates and populates a data table, 
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawChart() {
+
+    // Create the data table.
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Time');
+    data.addColumn('number', 'Altitude');
+    data.addColumn('number', 'Airspeed');
+    data.addRows(altAirspeed);
+
+    // Set chart options
+    var options =  {'width':900,
+                    'height':300,
+                    series:{0:{targetAxisIndex:0},
+                            1:{targetAxisIndex:1}},
+                    vAxes:[
+                      {title:'Altitude', textStyle:{color: 'red'}},
+                      {title:'Airspeed', textStyle:{color: 'blue'}}
+                      ]};
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+
   google.maps.event.addDomListener(window, 'load', initialize);
 
-  g3 = new Dygraph(
-    document.getElementById("graph"),
-      altAirspeed,
-    {
-      labels: [ "x", "altitude", "airspeed" ],
-      airspeed : {
-        axis : {}
-      }
-    }
-  );
-
-  function changeGraph(eventObject, argumentsObject)
-  {
-    if(eventObject.srcElement.id == "Airspeed"){
-      g3 = new Dygraph(
-        document.getElementById("graph"),
-          altAirspeed,
-        {
-          labels: [ "x", "altitude", "airspeed" ],
-          airspeed : {
-            axis : {}
-          }
-        }
-        );
-    }
-    if(eventObject.srcElement.id == "Engine"){
-      g3 = new Dygraph(
-        document.getElementById("graph"),
-          engine,
-        {
-          labels: [ "Time", "Temp", "RPM" ],
-          RPM : {
-            axis : {}
-          }
-        }
-        );
-    }
-    if(eventObject.srcElement.id == "Tracking"){
-      g3 = new Dygraph(
-        document.getElementById("graph"),
-          tracking,
-          {
-            labels: [ "Time", "Degrees" ]
-          }
-        );
-    }
-  }
 
   var AirspeedButton = document.getElementById("Airspeed");
   var EngineButton = document.getElementById("Engine");
   var TrackingButton = document.getElementById("Tracking");
+
+  function changeGraph(eventObject, argumentsObject)
+  {
+    var data = new google.visualization.DataTable();
+    if(eventObject.srcElement.id == "Airspeed"){
+      data.addColumn('string', 'Time');
+      data.addColumn('number', 'Altitude');
+      data.addColumn('number', 'Airspeed');
+      data.addRows(altAirspeed);
+
+      var options =  {'width':900,
+                'height':300,
+                series:{0:{targetAxisIndex:0},
+                        1:{targetAxisIndex:1}},
+                vAxes:[
+                  {title:'Altitude', textStyle:{color: 'red'}},
+                  {title:'Airspeed', textStyle:{color: 'blue'}}
+                  ]};
+    }
+    if(eventObject.srcElement.id == "Engine"){
+      data.addColumn('string', 'Time');
+      data.addColumn('number', 'Temp');
+      data.addColumn('number', 'RPM');
+      data.addRows(engine);
+
+      var options =  {'width':900,
+                'height':300,
+                series:{0:{targetAxisIndex:0},
+                        1:{targetAxisIndex:1}},
+                vAxes:[
+                  {title:'Temp', textStyle:{color: 'red'}},
+                  {title:'RPM', textStyle:{color: 'blue'}}
+                  ]};
+    }
+    if(eventObject.srcElement.id == "Tracking"){
+      data.addColumn('string', 'Time');
+      data.addColumn('number', 'Tracking');
+      data.addRows(tracking);
+
+      var options =  {'width':900,
+                'height':300,
+                series:{0:{targetAxisIndex:0}},
+                vAxes:[
+                  {title:'Tracking', textStyle:{color: 'red'}}
+                  ]};
+
+    }
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);
   TrackingButton.addEventListener("click", changeGraph);
