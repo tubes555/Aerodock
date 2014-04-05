@@ -36,6 +36,40 @@ class FlightsController extends AppController {
 		}
 	}
 
+	public function delete($id)
+	{
+		ClassRegistry::init('Log');
+		$log = new Log();
+
+		if( $this->request->is('get') )
+		{
+			throw new MethodNotAllowedException();
+		}
+		
+		if($this->Auth->user('type') == 'admin')
+		{
+			if($this->Flight->delete($id) && $log->deleteLog($id))
+			{
+				$this->Session->setFlash(
+					__('The Flight indexed %s has been deleted', $id ));
+			}
+			else
+			{
+				$this->Session->setFlash(
+					__('Attempt to delete flight %s failed.', $id));
+			}
+		} 	
+		else
+		{
+			$this->Session->SetFlash(
+				__('Only an Administrator may delete flights.'));
+
+		}
+		return $this->redirect(array('contoller' => 'flights', 'action' => 'index'));
+
+	}
+
+
 	public function view($id = null) {
 		if(!$id) {
 			throw new NotFoundException(__('Invalid flight'));
