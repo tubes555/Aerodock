@@ -38,10 +38,18 @@
 </div>
 <?php echo $this->Html->script($jspath) ?>
 <?php echo $this->Html->script($jslatlng) ?>
-<?php echo $this->Html->script('dygraph-combined');?>
 <script>
   var map;
   var mapProp;
+  var chart;
+  var marker;
+
+  var image = {
+        url:  "https://maps.gstatic.com/intl/en_us/mapfiles/markers2/measle_blue.png",
+        size: new google.maps.Size(7, 7),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(3, 3)
+  }
 
   function initialize()
   {
@@ -81,7 +89,9 @@
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Time');
     data.addColumn('number', 'Altitude');
+    data.addColumn({type: 'string', role: 'tooltip'});
     data.addColumn('number', 'Airspeed');
+    data.addColumn({type: 'string', role: 'tooltip'});
     data.addRows(altAirspeed);
 
     // Set chart options
@@ -90,21 +100,35 @@
                     series:{0:{targetAxisIndex:0},
                             1:{targetAxisIndex:1}},
                     vAxes:[
-                      {title:'Altitude', textStyle:{color: 'red'}},
-                      {title:'Airspeed', textStyle:{color: 'blue'}}
+                      {textStyle:{color: 'red'}},
+                      {textStyle:{color: 'blue'}}
                       ]};
 
     // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
+
+  google.visualization.events.addListener(chart, 'onmouseover', graphOverHandler);
+  google.visualization.events.addListener(chart, 'onmouseout', graphOutHandler);
   }
-
   google.maps.event.addDomListener(window, 'load', initialize);
-
 
   var AirspeedButton = document.getElementById("Airspeed");
   var EngineButton = document.getElementById("Engine");
   var TrackingButton = document.getElementById("Tracking");
+
+  function graphOutHandler(e){
+        marker.setMap(null);
+  };
+  function graphOverHandler(e){
+
+    marker = new google.maps.Marker({
+      position: flightCoords[e.row],
+      map: map,
+      icon: image
+    })
+    console.log(flightCoords[e.row]);
+  }
 
   function changeGraph(eventObject, argumentsObject)
   {
@@ -112,7 +136,9 @@
     if(eventObject.srcElement.id == "Airspeed"){
       data.addColumn('string', 'Time');
       data.addColumn('number', 'Altitude');
+      data.addColumn({type: 'string', role: 'tooltip'});
       data.addColumn('number', 'Airspeed');
+      data.addColumn({type: 'string', role: 'tooltip'});
       data.addRows(altAirspeed);
 
       var options =  {'width':900,
@@ -120,8 +146,8 @@
                 series:{0:{targetAxisIndex:0},
                         1:{targetAxisIndex:1}},
                 vAxes:[
-                  {title:'Altitude', textStyle:{color: 'red'}},
-                  {title:'Airspeed', textStyle:{color: 'blue'}}
+                  {textStyle:{color: 'red'}},
+                  {textStyle:{color: 'blue'}}
                   ]};
     }
     if(eventObject.srcElement.id == "Engine"){
@@ -135,8 +161,8 @@
                 series:{0:{targetAxisIndex:0},
                         1:{targetAxisIndex:1}},
                 vAxes:[
-                  {title:'Temp', textStyle:{color: 'red'}},
-                  {title:'RPM', textStyle:{color: 'blue'}}
+                  {textStyle:{color: 'red'}},
+                  {textStyle:{color: 'blue'}}
                   ]};
     }
     if(eventObject.srcElement.id == "Tracking"){
@@ -148,12 +174,14 @@
                 'height':300,
                 series:{0:{targetAxisIndex:0}},
                 vAxes:[
-                  {title:'Tracking', textStyle:{color: 'red'}}
+                  {textStyle:{color: 'red'}}
                   ]};
 
     }
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(data, options);
+    google.visualization.events.addListener(chart, 'onmouseover', graphOverHandler);
+    google.visualization.events.addListener(chart, 'onmouseout', graphOutHandler);
   }
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);

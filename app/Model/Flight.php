@@ -174,7 +174,8 @@ class Flight extends AppModel {
 		$trackingString = "var tracking = [";
 		for($i=0; $i<count($altitude); $i++){
 			$altitudeFile->write( "[\"".$timestamp[$i]."\",".
-														$altitude[$i].",".$airspeed[$i]."],");
+														$altitude[$i].",\"Altitude: ".$altitude[$i]." Airspeed: ".$airspeed[$i]."\",".
+														$airspeed[$i].",\"Altitude: ".$altitude[$i]." Airspeed: ".$airspeed[$i]."\"],");
 			$latLongFile->write( "new google.maps.LatLng(" . 
 														$latLongArray['lat'][$i] . "," . 
 														$latLongArray['long'][$i] . "),");
