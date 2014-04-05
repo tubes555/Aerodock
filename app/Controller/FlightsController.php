@@ -23,6 +23,7 @@ class FlightsController extends AppController {
 			$data = $this->request->data;
 			$csvData = $data['Flight']['csvPath'];
 			unset($data['Flight']['csvPath']);
+			$this->Flight->set('aircraft', "Diamond DA 40");
 			$this->Flight->set('instructorID', $this->Auth->user('username'));
 			if($this->Flight->save($data)) {
 				$this->Flight->uploadFile($csvData, $this->Flight->id);

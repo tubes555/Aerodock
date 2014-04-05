@@ -100,9 +100,10 @@
                     series:{0:{targetAxisIndex:0},
                             1:{targetAxisIndex:1}},
                     vAxes:[
-                      {textStyle:{color: 'red'}},
-                      {textStyle:{color: 'blue'}}
-                      ]};
+                      {title: 'Altitude' ,textStyle:{ color: 'red'}},
+                      {title: 'Airspeed' ,textStyle:{color: 'blue'}}
+                      ],
+                    legend: { position: 'none'}};
 
     // Instantiate and draw our chart, passing in some options.
     chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -127,7 +128,6 @@
       map: map,
       icon: image
     })
-    console.log(flightCoords[e.row]);
   }
 
   function changeGraph(eventObject, argumentsObject)
@@ -146,9 +146,10 @@
                 series:{0:{targetAxisIndex:0},
                         1:{targetAxisIndex:1}},
                 vAxes:[
-                  {textStyle:{color: 'red'}},
-                  {textStyle:{color: 'blue'}}
-                  ]};
+                      {title: 'Altitude' ,textStyle:{ color: 'red'}},
+                      {title: 'Airspeed' ,textStyle:{color: 'blue'}}
+                      ],
+                    legend: { position: 'none'}};
     }
     if(eventObject.srcElement.id == "Engine"){
       data.addColumn('string', 'Time');
@@ -161,9 +162,10 @@
                 series:{0:{targetAxisIndex:0},
                         1:{targetAxisIndex:1}},
                 vAxes:[
-                  {textStyle:{color: 'red'}},
-                  {textStyle:{color: 'blue'}}
-                  ]};
+                  {title: 'Temp',textStyle:{color: 'red'}},
+                  {title: 'RPM', textStyle:{color: 'blue'}}
+                  ],
+                  legend: { position: 'none'}};
     }
     if(eventObject.srcElement.id == "Tracking"){
       data.addColumn('string', 'Time');
@@ -174,8 +176,9 @@
                 'height':300,
                 series:{0:{targetAxisIndex:0}},
                 vAxes:[
-                  {textStyle:{color: 'red'}}
-                  ]};
+                  {title: 'Heading', textStyle:{color: 'red'}}
+                  ],
+                  legend: { position: 'none'}};
 
     }
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
