@@ -17,6 +17,7 @@
 		<th>Type</th>
 		<?php endif ?>
 		<th>Edit</th>
+		<th>Delete</th>
 	</tr>
 	<?php foreach ($users as $user): ?>
 	<tr>
@@ -30,6 +31,12 @@
 			'Edit User',
 			array('controller' => 'users', 'action' => 'edit', $user['User']['id']));
 			?></td>
+		<td><?php echo $this->Form->postLink(
+			'Delete User',
+			array('controller' => 'users', 'action' => 'delete', $user['User']['id']),
+			array('confirm' => 'Are you sure?'));
+			?>
+		</td>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($flight); ?>
