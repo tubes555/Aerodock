@@ -53,4 +53,12 @@ class Log extends AppModel {
 		return true;
 	}
 
+	public function deleteLog($id)
+	{
+		$condition = array('Log.flight_id' => $id );
+		$this->deleteAll($condition,false );
+
+	}
+
+
 }
