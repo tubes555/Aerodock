@@ -20,7 +20,7 @@ class UsersController extends AppController {
       unset($data['User']['csvPath']);
       if($this->User->uploadUsers($csvData))
       {
-        $this->Session->setFlash('New users file submitted.', 'success'));
+        $this->Session->setFlash('New users file submitted.', 'success');
         return $this->redirect(
           array('conroller' => 'users', 'action' => 'index'));
       }
@@ -107,8 +107,7 @@ class UsersController extends AppController {
           $this->Session->setFlash('The changes has been saved','success');
           return $this->redirect(array('controller' => 'flights', 'action' => 'index'));
       }
-      $this->Session->setFlash('The user could not be saved. Please, try again.','fail')
-      );
+      $this->Session->setFlash('The user could not be saved. Please, try again.','fail');
     } else {
       $user = $this->User->findById($id);
       $this->request->data = $user;

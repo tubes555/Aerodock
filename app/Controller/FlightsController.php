@@ -68,11 +68,11 @@ class FlightsController extends AppController {
 		{
 			if($this->Flight->delete($id) && $log->deleteLog($id))
 			{
-				$this->Session->setFlash("The flight has been deleted", 'success';
+				$this->Session->setFlash("The flight has been deleted", 'success');
 			}
 			else
 			{
-				$this->Session->setFlash('Attempt to delete flight failed.', 'fail';
+				$this->Session->setFlash('Attempt to delete flight failed.', 'fail');
 			}
 		} 	
 		else
