@@ -11,20 +11,14 @@ To do:
 		disable submit button after one click
 	Flights index:
 		search
-		flight length
 		redesign table cell
 	Maintenance-
 		maintenance method
 		index/view
-	Admin-
-		delete flights
-		add users
+
 
 Changing away from admin should check to see if there are any admins left.
 
-Change current charts to google charts
-
-Evan - pipeline free admin account, time bug in csvs
 
 Daniel O - Flag flight algorithm
 
