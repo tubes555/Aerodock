@@ -12,6 +12,41 @@ class UsersController extends AppController {
     }
   }
 
+  public function add() {
+    if($this->request->is('post')){
+      $this->User->create();
+      $data = $this->request->data;
+      $csvData = $data['User']['csvPath'];
+      unset($data['User']['csvPath']);
+      if($this->User->uploadUsers($csvData))
+      {
+        $this->Session->setFlash(__('New users file submitted.'));
+        return $this->redirect(
+          array('conroller' => 'users', 'action' => 'index'));
+      }
+      $this->Session->setFlash(__('Unable to add new users.'));
+    }
+
+  }
+
+  public function delete($id) 
+  {
+
+    ClassRegistry::init('User');
+    $user = new User();
+    $user->delete($id);
+ 
+    if($this->request->is('get'))
+    {
+      throw new MethodNotAllowedException();
+    }
+    if($this->Auth->user('type') == "admin")
+    {
+      $user->delete($id);
+    }
+
+  }
+
   public function logout() {
     return $this->redirect($this->Auth->logout());
   }

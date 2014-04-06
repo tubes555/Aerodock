@@ -15,7 +15,6 @@ To do:
 		redesign table cell
 	Maintenance-
 		maintenance method
-		Flag flight algorithm
 		index/view
 	Admin-
 		delete flights
@@ -27,6 +26,6 @@ Change current charts to google charts
 
 Evan - pipeline free admin account, time bug in csvs
 
-
+Daniel O - Flag flight algorithm
 
 
