@@ -27,12 +27,12 @@ class FlightsController extends AppController {
 			$this->Flight->set('instructorID', $this->Auth->user('username'));
 			if($this->Flight->save($data)) {
 				$this->Flight->uploadFile($csvData, $this->Flight->id);
-				$this->Session->setFlash(__('Your post has been saved.'));
+				$this->Session->setFlash('Your post has been saved.', 'default', array(), 'success');
 				return $this->redirect(
 					array('controller' => 'flights', 'action' => 'view', $this->Flight->id)
 					);
 			}
-			$this->Session->setFlash(__('Unable to add your post.'));
+			$this->Session->setFlash('Unable to add your post.', 'default', array(), 'danger');
 		}
 	}
 
@@ -43,26 +43,24 @@ class FlightsController extends AppController {
 
 		if( $this->request->is('get') )
 		{
-			throw new MethodNotAllowedException();
+			$this->Session->setFlash('You can not delete flights.', 'default', array(), 'danger');
+			return $this->redirect(array('action' => 'index'));
 		}
 		
 		if($this->Auth->user('type') == 'admin')
 		{
 			if($this->Flight->delete($id) && $log->deleteLog($id))
 			{
-				$this->Session->setFlash(
-					__('The Flight indexed %s has been deleted', $id ));
+				$this->Session->setFlash('The flight has been deleted', 'default', array(), 'success');
 			}
 			else
 			{
-				$this->Session->setFlash(
-					__('Attempt to delete flight %s failed.', $id));
+				$this->Session->setFlash('Attempt to delete flight failed.', 'default', array(), 'danger');
 			}
 		} 	
 		else
 		{
-			$this->Session->SetFlash(
-				__('Only an Administrator may delete flights.'));
+			$this->Session->SetFlash('Only an Administrator may delete flights.', 'default', array(), 'danger');
 
 		}
 		return $this->redirect(array('contoller' => 'flights', 'action' => 'index'));
@@ -80,7 +78,7 @@ class FlightsController extends AppController {
 		}	
 		if($flight['Flight']['studentid'] != $this->Auth->user('username') && 
 				$this->Auth->user('type') == 'student' ){
-			$this->Session->setFlash(__('Not authorized to view this flight.'));
+			$this->Session->setFlash('Not authorized to view this flight.','default', array(), 'danger');
 			return $this->redirect(
 					array('controller' => 'flights', 'action' => 'index'));
 		}

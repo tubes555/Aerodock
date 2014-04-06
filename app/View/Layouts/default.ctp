@@ -100,7 +100,9 @@
 		</div>
 		<div class="container">
 			<div id="content">
-				<?php echo $this->Session->flash(); ?>
+				<?php $this->Html->div('alert alert-success', $this->Session->flash('success'));			
+							$this->Html->div('alert alert-danger', $this->Session->flash('danger'));
+							?>
 
 				<?php echo $this->fetch('content'); ?>
 			</div>

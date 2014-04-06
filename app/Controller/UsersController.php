@@ -8,7 +8,7 @@ class UsersController extends AppController {
       if ($this->Auth->login()) {
         return $this->redirect(array('controller' => 'flights', 'action' => 'index'));
       }
-      $this->Session->setFlash(__('Invalid username or password, try again'));
+      $this->Session->setFlash('Invalid username or password, try again', 'default', array(), 'bad');
     }
   }
 

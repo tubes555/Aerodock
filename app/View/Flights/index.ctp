@@ -9,19 +9,21 @@
 		<th>Student</th>
 		<th>Instructor</th>
 		<th>Tail No</th>
-		<th>Created</th>
+		<th>Aircraft</th>
+		<th></th>
 	</tr>
 	<?php foreach ($flights as $flight): ?>
 	<tr>
 		<td><?php echo $flight['Flight']['studentid']; ?></td>
 		<td><?php echo $flight['Flight']['instructorID']; ?></td>
 		<td><?php echo $flight['Flight']['tailNo']; ?></td>
-		<td><?php echo $flight['Flight']['date']; ?></td>
+		<td><?php echo $flight['Flight']['aircraft']; ?></td>
 		<td><?php echo $this->Html->link(
 			'View Flight',
 			array('controller' => 'flights', 'action' => 'view', $flight['Flight']['id']));
 			?>
 		</td>
+		<?php if(Authcomponent::user('type') != 'student'):?>
 		<td><?php echo $this->Form->postLink(
 			'Delete Flight',
 			array('action' => 'delete', $flight['Flight']['id'] ),
@@ -29,6 +31,7 @@
 			);
 			?>
 		</td>	
+		<?php endif ?>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($flight); ?>
