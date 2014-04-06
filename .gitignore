@@ -9,6 +9,7 @@
 /dist
 /tags
 /app/webroot/files/*.csv
+/app/webroot/js/Flightjs/*.js
 
 # OS generated files #
 ######################
