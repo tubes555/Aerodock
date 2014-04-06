@@ -48,7 +48,7 @@ class User extends AppModel {
         }
     }
 
-    public function delete($id = null,  $cascade = true) {
+    public function delete($id = null,  $cascade = true) {    
         $this->request->onlyAllow('post');
 
         $this->User->id = $id;
@@ -60,6 +60,26 @@ class User extends AppModel {
             return $this->redirect(array('action' => 'index'));
         }
         $this->Session->setFlash(__('User was not deleted'));
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(array('controller'=> 'users','action' => 'index'));
+    }
+    
+
+    public function uploadUsers($uploadData){
+
+        $handle = fopen($uploadData['tmp_name'], 'r');
+        $names = fgetcsv($handle);
+        $numUsers = count($names);
+        $data = array();
+        for($i = 0; $i < $numUsers; $i++)
+        {
+            
+                $row['firstname'] = "";
+                $row['lastname'] = "";
+                $row['username'] = substr($names[$i], 0, strpos($names[$i], "@"));
+                $row['type'] = "student";
+                $data[$i] = $row;
+        }
+        $this->saveMany($data);
+        return true; 
     }
 }

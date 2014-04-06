@@ -24,6 +24,9 @@ class Log extends AppModel {
 			unset($header[$dropIndex]);
 		}
 		$index = 0;
+		$firstFlightTime = "";
+		$lastFlightTime = "";
+
 		$data = array();
 		while($row = fgetcsv($handle)) {
 
@@ -32,25 +35,45 @@ class Log extends AppModel {
 					unset($row[$dropIndex]);
 				}
 				$row = array_combine($header, $row);
+
+				if($index == 0)
+				{
+
+					
+					$firstFlightTime = $row['Time'];
+
+				}
+
+				$lastFlightTime = $row['Time'];
+
+
+
 				$row['flight_id'] = $flightId;
 				$data[$index] = $row;
 				$index++;
 			}
 
-
-			if($index == 750){
+			if($index % 750 == 0){
 				$this->create();
-				$this->saveMany($data, array(
-																'validate' => false,
-																));
+
+				$this->saveMany($data);
 				$data = array();
-				$index = 0;
 			}
 
+			//pr($row);
+
 		}
+
 		$this->create();
 		$this->saveMany($data);
-		return true;
+
+		// Time format is HH:MM:SS
+		$start = strtotime($firstFlightTime);
+		$end = strtotime($lastFlightTime);
+
+		$delta = $end - $start;
+
+		return array("return" => true, "duration" => $delta,);
 	}
 
 	public function deleteLog($id)
