@@ -94,3 +94,14 @@ CREATE TABLE `users` (
   `modified` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+
+ ---
+ --- Dumping data for table `users`
+ ---
+ -
+ INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `type`, `created`, `modified`) VALUES
+ (1, 'Maint Man', 'Mr. Fixer', 'maintenance', 'maint', '2014-03-29 16:18:05', '2014-03-30 11:12:22'),
+ (2, 'Jon', 'Doe', 'student', 'student', '2014-03-29 18:17:55', '2014-03-30 11:17:11'),
+ (3, 'Admin', 'Admin', 'admin', 'admin', '2014-03-29 20:37:23', '0000-00-00 00:00:00'),
+ (4, 'Teach', 'Teacher', 'teacher', 'teacher', '2014-03-30 21:40:10', '0000-00-00 00:00:00');
