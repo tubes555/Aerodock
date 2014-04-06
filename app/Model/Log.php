@@ -10,7 +10,7 @@ class Log extends AppModel {
 		$numItems = count($header);
 		$dropColumns = array(0,2,3,6,7,15,16,19,20,21,38,39,
 													40,41,42,43,44,45,46,47,48,49,
-													50,51,52,53,57,58,59,60,61,62);
+													50,51,52,53,54,55,57,58,59,60,61,62);
 		for ($i=0; $i < count($header); $i++) {
 			$header[$i] = trim($header[$i]);
 			if(substr($header[$i], 2,1) == " "){
