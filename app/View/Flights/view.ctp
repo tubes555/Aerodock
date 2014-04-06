@@ -87,11 +87,9 @@
 
     // Create the data table.
     var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Time');
+    data.addColumn({type: 'string', role: 'domain'});
     data.addColumn('number', 'Altitude');
-    data.addColumn({type: 'string', role: 'tooltip'});
     data.addColumn('number', 'Airspeed');
-    data.addColumn({type: 'string', role: 'tooltip'});
     data.addRows(altAirspeed);
 
     // Set chart options
@@ -103,7 +101,8 @@
                       {title: 'Altitude' ,textStyle:{ color: 'red'}},
                       {title: 'Airspeed' ,textStyle:{color: 'blue'}}
                       ],
-                    legend: { position: 'none'}};
+                    legend: { position: 'none'},
+                  focusTarget: 'category'};
 
     // Instantiate and draw our chart, passing in some options.
     chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -189,7 +188,7 @@
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);
   TrackingButton.addEventListener("click", changeGraph);
-
+/*
   var boxBound = new google.maps.LatLngBounds(
     new google.maps.LatLng(35.6556-0.001,-86.2666-0.007),
         new google.maps.LatLng(35.6597+0.001,-86.2725+0.007));
@@ -249,6 +248,6 @@
   t1.addEventListener("mouseleave", changeT);
   t2.addEventListener("mouseout", changeT);
   t3.addEventListener("mouseout", changeT);
-  
+  */
 </script>
 

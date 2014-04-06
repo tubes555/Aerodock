@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 06, 2014 at 08:34 PM
+-- Generation Time: Apr 06, 2014 at 10:55 PM
 -- Server version: 5.5.33
 -- PHP Version: 5.5.3
 
@@ -26,7 +26,7 @@ CREATE TABLE `flights` (
   `instructorID` varchar(32) NOT NULL,
   `aircraft` varchar(32) NOT NULL,
   `tailNo` varchar(32) NOT NULL,
-  `date` datetime NOT NULL,
+  `date` date NOT NULL,
   `comments` text NOT NULL,
   `maintenance` tinyint(1) NOT NULL,
   `duration` int(11) DEFAULT NULL,

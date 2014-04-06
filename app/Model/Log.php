@@ -29,6 +29,11 @@ class Log extends AppModel {
 
 		$data = array();
 		while($row = fgetcsv($handle)) {
+			if($index == 0)
+			{
+				$date = $row[0];
+				$firstFlightTime = $row[1];
+			}
 
 			if(count($row) == $numItems && !(ctype_space($row[4]) || ctype_space($row[5]))){
 				foreach ($dropColumns as $dropIndex) {
@@ -36,13 +41,7 @@ class Log extends AppModel {
 				}
 				$row = array_combine($header, $row);
 
-				if($index == 0)
-				{
 
-					
-					$firstFlightTime = $row['Time'];
-
-				}
 
 				$lastFlightTime = $row['Time'];
 
@@ -73,7 +72,7 @@ class Log extends AppModel {
 
 		$delta = $end - $start;
 
-		return array("return" => true, "duration" => $delta,);
+		return array("return" => true, "duration" => $delta, "date" => $date);
 	}
 
 	public function deleteLog($id)

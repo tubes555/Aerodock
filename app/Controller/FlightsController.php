@@ -30,6 +30,7 @@ class FlightsController extends AppController {
 
 				$loadCSVArray = $this->Flight->uploadFile($csvData, $this->Flight->id);
 				$this->Flight->set('duration', $loadCSVArray['duration']);
+				$this->Flight->set('date', $loadCSVArray['date']);
 				$this->Flight->save();
 
 				$this->Session->setFlash(__('Your post has been saved.'));
