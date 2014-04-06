@@ -1,1 +1,0 @@
-var flightCoords  = [new google.maps.LatLng(,),];
