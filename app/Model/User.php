@@ -48,19 +48,17 @@ class User extends AppModel {
         }
     }
 
-    public function delete($id = null,  $cascade = true) {    
-        $this->request->onlyAllow('post');
-
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
+    public function deleteUser($id)
+    {    
+        if($this->delete($id))
+        {
+            return true;
         }
-        if ($this->User->delete()) {
-            $this->Session->setFlash(__('User deleted'));
-            return $this->redirect(array('action' => 'index'));
+        else
+        {
+            return false;
         }
-        $this->Session->setFlash(__('User was not deleted'));
-        return $this->redirect(array('controller'=> 'users','action' => 'index'));
+        
     }
     
 
