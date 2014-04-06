@@ -189,7 +189,7 @@
   AirspeedButton.addEventListener("click", changeGraph);
   EngineButton.addEventListener("click", changeGraph);
   TrackingButton.addEventListener("click", changeGraph);
-/*
+
   var boxBound = new google.maps.LatLngBounds(
     new google.maps.LatLng(35.6556-0.001,-86.2666-0.007),
         new google.maps.LatLng(35.6597+0.001,-86.2725+0.007));
@@ -249,6 +249,6 @@
   t1.addEventListener("mouseleave", changeT);
   t2.addEventListener("mouseout", changeT);
   t3.addEventListener("mouseout", changeT);
-  */
+  
 </script>
 

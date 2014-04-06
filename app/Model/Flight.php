@@ -77,7 +77,8 @@ class Flight extends AppModel {
 		$minLat = $maxLat;
 		$maxLong = $latLongArray['long'][$index];
 		$minLong = $maxLong;
-/*
+		$lastTime = $timestamp[$index];
+/*	
 		$altFile = new File('benstuff.txt');
 		$altFile->create();
 
@@ -115,6 +116,20 @@ class Flight extends AppModel {
 				if($flightInfo[$j]['Log']['Longitude'] > $maxLong){
 					$maxLong = $flightInfo[$j]['Log']['Longitude'];
 				}
+
+				// Fixes issue where minute does not increment after seconds reset to 00 in CSV.
+				if((int)substr($timestamp[$index],0,2) <= (int)substr($lastTime,0,2) &&
+					 (int)substr($timestamp[$index],3,2) <= (int)substr($lastTime,3,2) &&
+					 (int)substr($timestamp[$index],6,2) <= (int)substr($lastTime,6,2)){
+					if(substr($timestamp[$index],6,2) == '00'){
+						if(substr($timestamp[$index],3,2) == '00'){
+							$timestamp[$index] = ((string)((int)substr($timestamp[$index],0,2)) + 1).substr($timestamp[$index],2);
+						} else {
+							$timestamp[$index] = substr($timestamp[$index],0,3).((string)((int)substr($timestamp[$index],3,2)) + 1).substr($timestamp[$index],5);
+						}
+					}
+				}
+
 				$index++;
 			
 			}
