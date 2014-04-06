@@ -63,7 +63,7 @@ class Flight extends AppModel {
 			'limit' => 1));
 
 		$index = 0;
-		pr($flightInfo);
+
 		$latLongArray['lat'][$index] = $flightInfo[0]['Log']['Latitude'];
 		$latLongArray['long'][$index] = $flightInfo[0]['Log']['Longitude'];
 		$altitude[$index] = $flightInfo[0]['Log']['AltMSL'];
