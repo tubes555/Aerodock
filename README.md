@@ -3,12 +3,6 @@ If you are working on a particular bug or feature remove it from the following l
 
 
 To do:
-
-
-	Add flight-
-		add date
-		load bar
-		disable submit button after one click
 	Flights index:
 		search
 		redesign table cell

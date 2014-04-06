@@ -8,7 +8,7 @@ class UsersController extends AppController {
       if ($this->Auth->login()) {
         return $this->redirect(array('controller' => 'flights', 'action' => 'index'));
       }
-      $this->Session->setFlash('Invalid username or password, try again', 'default', array(), 'bad');
+      $this->Session->setFlash('Invalid username or password, try again', 'fail');
     }
   }
 
@@ -20,11 +20,11 @@ class UsersController extends AppController {
       unset($data['User']['csvPath']);
       if($this->User->uploadUsers($csvData))
       {
-        $this->Session->setFlash(__('New users file submitted.'));
+        $this->Session->setFlash('New users file submitted.', 'success'));
         return $this->redirect(
           array('conroller' => 'users', 'action' => 'index'));
       }
-      $this->Session->setFlash(__('Unable to add new users.'));
+      $this->Session->setFlash('Unable to add new users.','fail');
     }
 
   }
@@ -54,15 +54,15 @@ class UsersController extends AppController {
   public function view($id = NULL){
     $user = $this->Auth->user();
     if(!$id) {
-      throw new NotFoundException(__('Invalid user'));
+      throw new NotFoundException('Invalid user','fail');
     }
     if(!$user){
-      $this->Session->setFlash(__('Please log in to use site.'));
+      $this->Session->setFlash('Please log in to use site.','fail');
       return $this->redirect(
           array('controller' => 'users', 'action' => 'login'));
     }
     if($user['id'] != $id && $user['type'] == 'student'){
-      $this->Session->setFlash(__('Not authorized to view this user page.'));
+      $this->Session->setFlash('Not authorized to view this user page.','fail');
       return $this->redirect(
           array('controller' => 'flights', 'action' => 'index'));
     }
@@ -82,7 +82,7 @@ class UsersController extends AppController {
   public function edit($id = null){
     $this->User->id = $id;
     if (!$this->User->exists()) {
-        throw new NotFoundException(__('Invalid user'));
+        throw new NotFoundException('Invalid user','fail');
     }
     if ($this->request->is('post') || $this->request->is('put')) {
       $user = $this->User->findById($id);
@@ -104,11 +104,10 @@ class UsersController extends AppController {
       $this->User->set('lastname', $this->request->data['User']['lastname']);
 
       if ($this->User->save()) {
-          $this->Session->setFlash(__('The changes has been saved'));
+          $this->Session->setFlash('The changes has been saved','success');
           return $this->redirect(array('controller' => 'flights', 'action' => 'index'));
       }
-      $this->Session->setFlash(
-          __('The user could not be saved. Please, try again.')
+      $this->Session->setFlash('The user could not be saved. Please, try again.','fail')
       );
     } else {
       $user = $this->User->findById($id);
@@ -117,12 +116,12 @@ class UsersController extends AppController {
         throw new NotFoundException(__('Invalid user'));
       }
       if(!$user){
-        $this->Session->setFlash(__('Please log in to use site.'));
+        $this->Session->setFlash('Please log in to use site.','fail');
         return $this->redirect(
             array('controller' => 'users', 'action' => 'login'));
       }
       if($this->Auth->user('id') != $id && $this->Auth->user('type') == 'student'){
-        $this->Session->setFlash(__('Not authorized to view this user page.'));
+        $this->Session->setFlash('Not authorized to view this user page.','fail');
         return $this->redirect(
             array('controller' => 'flights', 'action' => 'index'));
       }
@@ -146,7 +145,7 @@ class UsersController extends AppController {
     } else if($this->Auth->user('type') == 'teacher'){
       $this->set('users', $this->User->findAllByType('student'));
     } else {
-      $this->Session->setFlash(__('Not authorized to view this user page.'));
+      $this->Session->setFlash('Not authorized to view this user page.','fail');
        return $this->redirect(
             array('controller' => 'flights', 'action' => 'index'));
     }

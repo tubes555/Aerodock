@@ -5,16 +5,7 @@ class Flight extends AppModel {
 	public $validate = array(
 	'studentID' => array(
 		'rule' => 'notEmpty'
-		),
-	'instructorID' => array(
-		'rule' => 'notEmpty'
-		),
-	'aircraft' => array(
-		'rule' => 'notEmpty'
-		),
-	'tailNo' => array(
-		'rule' => 'notEmpty'
-		),
+		)
 	);
 
 
@@ -30,6 +21,7 @@ class Flight extends AppModel {
 		$loadCSVArray = $log->loadCSV($uploadData, $id);
 
 		if($loadCSVArray['return']){
+			unset($loadCSVArray['return']);
 			return $loadCSVArray;
 		}
 

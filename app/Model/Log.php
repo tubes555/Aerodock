@@ -1,11 +1,12 @@
 <?php
 class Log extends AppModel {
-	public function loadCSV($uploadFile, $flightId){
+public function loadCSV($uploadFile, $flightId){
 
 		$handle = fopen($uploadFile['tmp_name'],'r');
+		$row = fgetcsv($handle);
+		$aircraft = substr($row[2],16,-1);
+		$tailNumber = substr($row[6],12,-1);
 		fgetcsv($handle);
-		fgetcsv($handle);
-
 		$header = fgetcsv($handle);
 		$numItems = count($header);
 		$dropColumns = array(0,2,3,6,7,15,16,19,20,21,38,39,
@@ -59,8 +60,6 @@ class Log extends AppModel {
 				$data = array();
 			}
 
-			//pr($row);
-
 		}
 
 		$this->create();
@@ -72,7 +71,11 @@ class Log extends AppModel {
 
 		$delta = $end - $start;
 
-		return array("return" => true, "duration" => $delta, "date" => $date);
+		return array("return" => true,
+								 "duration" => $delta,
+								 "date" => $date, 
+								 "tailNo" => $tailNumber, 
+								 "aircraft" => $aircraft);
 	}
 
 	public function deleteLog($id)
