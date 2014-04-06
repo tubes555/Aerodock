@@ -1,17 +1,17 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.6
+-- version 4.1.9
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Mar 30, 2014 at 11:41 PM
--- Server version: 5.5.33
--- PHP Version: 5.5.3
+-- Host: localhost:3306
+-- Generation Time: Apr 05, 2014 at 05:28 PM
+-- Server version: 5.5.34
+-- PHP Version: 5.5.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- Database: `blogtutorial`
+-- Database: `aerodock`
 --
 
 -- --------------------------------------------------------
@@ -30,8 +30,9 @@ CREATE TABLE `flights` (
   `comments` text NOT NULL,
   `maintenance` tinyint(1) NOT NULL,
   `csvPath` varchar(50) NOT NULL,
+  `duration` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -75,7 +76,7 @@ CREATE TABLE `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   KEY `Key` (`flight_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6925 ;
 
 -- --------------------------------------------------------
 
@@ -93,13 +94,3 @@ CREATE TABLE `users` (
   `modified` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `type`, `created`, `modified`) VALUES
-(1, 'Maint Man', 'Mr. Fixer', 'maintenance', 'maint', '2014-03-29 16:18:05', '2014-03-30 11:12:22'),
-(2, 'Jon', 'Doe', 'student', 'student', '2014-03-29 18:17:55', '2014-03-30 11:17:11'),
-(3, 'Admin', 'Admin', 'admin', 'admin', '2014-03-29 20:37:23', '0000-00-00 00:00:00'),
-(4, 'Teach', 'Teacher', 'teacher', 'teacher', '2014-03-30 21:40:10', '0000-00-00 00:00:00');
