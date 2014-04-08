@@ -20,6 +20,7 @@ class FlightsController extends AppController {
 	public function add(){
 		ClassRegistry::init('User');
 		$user = new User();
+		pr($this->request->data);
 		if($this->request->is('post')) {
 			if($this->request->data['Flight']['csvPath']['size'] == 0){
 				$this->Session->setFlash('Attach CSV to upload flight.', 'fail');
@@ -29,7 +30,7 @@ class FlightsController extends AppController {
 				$this->Session->setFlash('Only attach CSVs for upload.', 'fail');
 				return $this->redirect(array('action' => 'add'));
 			}
-			if(empty($user->findByUsername($this->request->data['Flight']['studentid']))){
+			if(count($user->findByUsername($this->request->data['Flight']['studentid']))==0){
 				$this->Session->setFlash('User with this ID is not in the system.', 'fail');
 				return $this->redirect(array('action' => 'add'));
 			}
@@ -106,6 +107,7 @@ class FlightsController extends AppController {
 		$this->set('jslatlng', 'Flightjs'.DS.'latlong' . $flight['Flight']['id']);
 		$this->set('center', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
+		//$this->set('events', $this->Flight->)
 
 	}
 
