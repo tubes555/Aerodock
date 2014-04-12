@@ -30,11 +30,15 @@
 			?>
 		</td>
 		<?php if(Authcomponent::user('type') != 'student'):?>
-		<td><?php echo $this->Form->postLink(
-			'Delete Flight',
-			array('action' => 'delete', $flight['Flight']['id'] ),
-			array('confirm' => 'Are you sure?')
-			);
+		<td><?php 
+			if(Authcomponent::user('type') == 'admin')
+			{
+				echo $this->Form->postLink(
+				'Delete Flight',
+				array('action' => 'delete', $flight['Flight']['id'] ),
+				array('confirm' => 'Are you sure?')
+				);
+			}
 			?>
 		</td>	
 		<?php endif ?>

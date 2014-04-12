@@ -8,6 +8,22 @@ class Flight extends AppModel {
 		)
 	);
 
+	public function deleteFlight($id)
+	{
+		ClassRegistry::init('Log');
+		$log = new Log();
+
+		if($this->delete($id) && $log->deleteLog($id))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+
+
+	}
 
 	public function uploadFile( $uploadData, $id ) {
 		ClassRegistry::init('Log');

@@ -32,18 +32,22 @@ class UsersController extends AppController {
   public function delete($id) 
   {
 
-    ClassRegistry::init('User');
-    $user = new User();
-    $user->delete($id);
  
     if($this->request->is('get'))
     {
       throw new MethodNotAllowedException();
     }
-    if($this->Auth->user('type') == "admin")
+
+    if($this->Auth->user('type') == "admin" && $this->User->deleteUser($id))
     {
-      $user->delete($id);
+      $this->Session->setFlash('User has been deleted.','success');
+
     }
+    else
+    {
+      $this->Session->setFlash('Failed to delete user.','danger');
+    }
+    $this->redirect(array('controller' => 'users', 'action' => 'index'));
 
   }
 

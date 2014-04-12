@@ -56,16 +56,14 @@ class FlightsController extends AppController {
 
 	public function delete($id)
 	{
-		ClassRegistry::init('Log');
-		$log = new Log();
-
+		
 		if( $this->request->is('get') )
 		{
 			$this->Session->setFlash('You can not delete flights.', 'fail');
 			return $this->redirect(array('action' => 'index'));
 		}
 		
-		if($this->Auth->user('type') == 'admin')
+		if($this->Auth->user('type') == 'admin' && $this->Flight->deleteFlight($id))
 		{
 			if($this->Flight->delete($id) && $log->deleteLog($id))
 			{
