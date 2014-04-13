@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 06, 2014 at 10:55 PM
+-- Generation Time: Apr 13, 2014 at 11:41 PM
 -- Server version: 5.5.33
 -- PHP Version: 5.5.3
 
@@ -43,11 +43,8 @@ CREATE TABLE `logs` (
   `Time` time NOT NULL,
   `Latitude` decimal(9,7) DEFAULT NULL,
   `Longitude` decimal(10,7) DEFAULT NULL,
-  `AltMSL` varchar(8) DEFAULT NULL,
-  `OAT` varchar(6) DEFAULT NULL,
   `IAS` int(3) DEFAULT NULL,
   `GndSpd` int(3) DEFAULT NULL,
-  `VSpd` varchar(8) DEFAULT NULL,
   `Pitch` varchar(7) DEFAULT NULL,
   `Roll` varchar(7) DEFAULT NULL,
   `HDG` int(3) DEFAULT NULL,
@@ -67,7 +64,6 @@ CREATE TABLE `logs` (
   `EGT3` decimal(7,2) DEFAULT NULL,
   `EGT4` decimal(7,2) DEFAULT NULL,
   `AltGPS` varchar(8) DEFAULT NULL,
-  `TAS` varchar(4) DEFAULT NULL,
   `VSpdG` varchar(6) DEFAULT NULL,
   `flight_id` int(11) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,

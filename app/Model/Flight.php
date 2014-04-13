@@ -67,51 +67,25 @@ class Flight extends AppModel {
 		$pageNum = 1;
 		$flightInfo = $log->find('all', array(
 			'conditions' => array('Log.flight_id' => $flight_id),
-			'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK','Time','AltGPS','Pitch', 'Roll'),
+			'fields' => array('Latitude', 'Longitude', 'IAS', 
+												'CHT1', 'RPM','TRK','Time','AltGPS',
+												'Pitch', 'Roll', 'FFlow', 'FPres','GndSpd',
+												'OilT', 'OilP', 'MAP','CHT1','CHT2','CHT3', 'CHT4',
+												'EGT1', 'EGT2', 'EGT3', 'EGT4','VSpdG'),
 			'limit' => 1));
 
 		$index = 0;
-
-		$latLongArray['lat'][$index] = $flightInfo[0]['Log']['Latitude'];
-		$latLongArray['long'][$index] = $flightInfo[0]['Log']['Longitude'];
-		$altitude[$index] = $flightInfo[0]['Log']['AltMSL'];
-		$airspeed[$index] = $flightInfo[0]['Log']['IAS'];
-		$engineRPM[$index] = $flightInfo[0]['Log']['CHT1'];
-		$engineTemp[$index] = $flightInfo[0]['Log']['RPM'];
-		$tracking[$index] = $flightInfo[0]['Log']['TRK'];
-
-		$timestamp[$index] = $flightInfo[0]['Log']['Time'];
-		$maxLat = $latLongArray['lat'][$index];
+		$maxLat = $flightInfo[0]['Log']['Latitude'];
 		$minLat = $maxLat;
-		$maxLong = $latLongArray['long'][$index];
+		$maxLong = $flightInfo[0]['Log']['Longitude'];
 		$minLong = $maxLong;
-		$lastTime = $timestamp[$index];
-/*	
-		$altFile = new File('benstuff.txt');
-		$altFile->create();
 
-		$alt1 = "";
-		$alt2 = "";
-		$pitchstring = ""; 
-		$rollstring = "";
-		*/
+		$lastTime = $flightInfo[0]['Log']['Time'];
+		$flightAggregate = array();
+
 		// While there is still data to return...
 		while(count($flightInfo) != 0){
 			for($j=0; $j < count($flightInfo); $j++){
-				/*
-				$alt1 .= "\n".$flightInfo[$j]['Log']['AltMSL'];
-				$alt2 .= "\n".$flightInfo[$j]['Log']['AltGPS'];
-				$pitchstring .= "\n" .$flightInfo[$j]['Log']['Pitch'];
-				$rollstring .= "\n" .$flightInfo[$j]['Log']['Roll'];
-*/
-				$latLongArray['lat'][$index]  = $flightInfo[$j]['Log']['Latitude'];
-				$latLongArray['long'][$index] = $flightInfo[$j]['Log']['Longitude'];
-				$altitude[$index]   = $flightInfo[$j]['Log']['AltMSL'];
-				$airspeed[$index]   = $flightInfo[$j]['Log']['IAS'];
-				$engineRPM[$index]  = $flightInfo[$j]['Log']['CHT1'];
-				$engineTemp[$index] = $flightInfo[$j]['Log']['RPM'];
-				$tracking[$index]   = $flightInfo[$j]['Log']['TRK'];
-				$timestamp[$index]  = $flightInfo[$j]['Log']['Time'];
 				if($flightInfo[$j]['Log']['Latitude'] < $minLat){
 					$minLat = $flightInfo[$j]['Log']['Latitude'];
 				}
@@ -126,50 +100,46 @@ class Flight extends AppModel {
 				}
 
 				// Fixes issue where minute does not increment after seconds reset to 00 in CSV.
-				if((int)substr($timestamp[$index],0,2) <= (int)substr($lastTime,0,2) &&
-					 (int)substr($timestamp[$index],3,2) <= (int)substr($lastTime,3,2) &&
-					 (int)substr($timestamp[$index],6,2) <= (int)substr($lastTime,6,2)){
-					if(substr($timestamp[$index],6,2) == '00'){
-						if(substr($timestamp[$index],3,2) == '00'){
-							$timestamp[$index] = ((string)((int)substr($timestamp[$index],0,2)) + 1).substr($timestamp[$index],2);
+				if((int)substr($flightInfo[$j]['Log']['Time'],0,2) <= (int)substr($lastTime,0,2) &&
+					 (int)substr($flightInfo[$j]['Log']['Time'],3,2) <= (int)substr($lastTime,3,2) &&
+					 (int)substr($flightInfo[$j]['Log']['Time'],6,2) <= (int)substr($lastTime,6,2)){
+					if(substr($flightInfo[$j]['Log']['Time'],6,2) == '00'){
+						if(substr($flightInfo[$j]['Log']['Time'],3,2) == '00'){
+							$flightInfo[$j]['Log']['Time'] = ((string)((int)substr($flightInfo[$j]['Log']['Time'],0,2)) + 1).
+																		substr($flightInfo[$j]['Log']['Time'],2);
 						} else {
-							$timestamp[$index] = substr($timestamp[$index],0,3).((string)((int)substr($timestamp[$index],3,2)) + 1).substr($timestamp[$index],5);
+							$flightInfo[$j]['Log']['Time'] = substr($flightInfo[$j]['Log']['Time'],0,3).
+																	((string)((int)substr($flightInfo[$j]['Log']['Time'],3,2)) + 1).
+																	substr($flightInfo[$j]['Log']['Time'],5);
 						}
 					}
 				}
-
+				$lastTime = $flightInfo[$j]['Log']['Time'];
+				$flightAggregate[$index] = $flightInfo[$j];
+				unset($flightInfo[$j]);
 				$index++;
 			
 			}
 			$flightInfo = $log->find('all', array(
 				'conditions' => array('Log.flight_id' => $flight_id),
-				'fields' => array('Log.Latitude', 'Log.Longitude', 'Log.AltMSL', 'Log.IAS', 'CHT1', 'RPM','TRK','Time', 'AltGPS','Pitch', 'Roll'),
+				'fields' => array('Latitude', 'Longitude', 'IAS', 
+												'CHT1', 'RPM','TRK','Time','AltGPS',
+												'Pitch', 'Roll', 'FFlow', 'FPres','GndSpd',
+												'OilT', 'OilP', 'MAP','CHT1','CHT2','CHT3', 'CHT4',
+												'EGT1', 'EGT2', 'EGT3', 'EGT4','VSpdG'),
 				'limit' => 500,
 				'page' => $pageNum));
 			$pageNum++;
 		}
-		/*
-		$altFile->write("AltMSL\n");
-		$altFile->write($alt1);
-		$altFile->write("\n\n\n\nAltGPS\n");
-		$altFile->write($alt2);
-		$altFile->write("\n\n\n\nPitch:\n");
-		$altFile->write($pitchstring);
-		$altFile->write("\n\n\n\nRoll:\n");
-		$altFile->write($rollstring);
-		*/
-		// Store that data in the array.
 
 		$center = array('lat' => ($maxLat + $minLat)/2,
 										'long' => ($maxLong + $minLong)/2);
 
 		$minMax = array('maxLat' => $maxLat, 'minLat' => $minLat,
 										'maxLong' => $maxLong, 'minLong' => $minLong);
-		//pr($airspeed);
+
 		$zoomLevel = $this->calculateZoom($minMax);
-		$this->makejscript($altitude, $airspeed, $latLongArray,
-											 $engineTemp, $engineRPM, $flight_id, 
-											 $tracking, $timestamp);
+		$this->makejscript($flightAggregate,$flight_id);
 		return array('center' => $center,
 								 'zoomLevel' => $zoomLevel);
 
@@ -183,9 +153,7 @@ class Flight extends AppModel {
 		return $longZoom;
 	}
 
-	private function makejscript($altitude, $airspeed, $latLongArray,
-															 $engineTemp, $engineRPM, $flight_id, 
-															 $tracking, $timestamp){
+	private function makejscript($flightAggregate, $flight_id){
 
 		$altitudeFileName = "al" . $flight_id . ".js";
 		$altitudeFile = new File('js' . DS . 'Flightjs'. DS. $altitudeFileName, true, 0644);
@@ -198,17 +166,17 @@ class Flight extends AppModel {
 
 		$engineString = "var engine = [";
 		$trackingString = "var tracking = [";
-		for($i=0; $i<count($altitude); $i++){
+		for($i=0; $i<count($flightAggregate); $i++){
 			$altitudeFile->write( "[\"".$i."\",".
-														$altitude[$i].",".
-														$airspeed[$i]."],");
+														$flightAggregate[$i]['Log']['AltGPS'].",".
+														$flightAggregate[$i]['Log']['IAS']."],");
 			$latLongFile->write( "new google.maps.LatLng(" . 
-														$latLongArray['lat'][$i] . "," . 
-														$latLongArray['long'][$i] . "),");
-			$engineString .= "[\"".$timestamp[$i]."\",".
-														$engineTemp[$i].",".$engineRPM[$i]."],";
-			$trackingString .= "[\"" .$timestamp[$i]."\",".
-														$tracking[$i]."],\n";
+														$flightAggregate[$i]['Log']['Latitude'] . "," . 
+														$flightAggregate[$i]['Log']['Longitude'] . "),");
+			$engineString .= "[\"".$flightAggregate[$i]['Log']['Time']."\",".
+														$flightAggregate[$i]['Log']['CHT1'].",".$flightAggregate[$i]['Log']['RPM']."],";
+			$trackingString .= "[\"" .$flightAggregate[$i]['Log']['Time']."\",".
+														$flightAggregate[$i]['Log']['TRK']."],\n";
 		}
 		$altitudeFile->write( "];");
 		$latLongFile->write( "];");

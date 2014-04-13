@@ -9,18 +9,17 @@ class FlightsController extends AppController {
 
 	public function index(){
 		$user = $this->Auth->user();
-		$this->set('type', $this->Auth->user('type'));
 		if($user['type'] != 'student'){
 			$this->set('flights', $this->Flight->find('all'));
 		} else {
-			$this->set('flights', $this->Flight->findAllByStudentid('student'));
+			$this->set('flights',
+							 $this->Flight->findAllByStudentid($this->Auth->user('username')));
 		}
 	}
 
 	public function add(){
 		ClassRegistry::init('User');
-		$user = new User();
-		pr($this->request->data);
+		$user = new User(); 
 		if($this->request->is('post')) {
 			if($this->request->data['Flight']['csvPath']['size'] == 0){
 				$this->Session->setFlash('Attach CSV to upload flight.', 'fail');
@@ -106,6 +105,17 @@ class FlightsController extends AppController {
 		$this->set('center', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
 		//$this->set('events', $this->Flight->)
+
+	}
+
+	public function maintenance(){
+		if($this->Auth->user('type') != 'maint' && $this->Auth->user('type') != 'admin'){
+			$this->Session->setFlash('Not authorized to view maintenance logs.','fail');
+			return $this->redirect(array('controller' => 'flights',
+																	 'action' => 'index'));
+		}
+		$this->set('flights',
+							 $this->Flight->findAllByMaintenance(1));
 
 	}
 

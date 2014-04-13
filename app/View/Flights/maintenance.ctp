@@ -1,14 +1,7 @@
 <h1>All flights:</h1>
-<?php if(Authcomponent::user('type') != 'student'){
-	echo $this->Html->link(
-		'Add Flight',
-		array('controller' => 'flights', 'action' => 'add'));
-	}?>
 <table class="table">
 	<tr>
-		<?php if(Authcomponent::user('type') != 'student'): ?>
-		<th>Student</th>
-		<?php endif ?>
+		<th>Pilot</th>
 		<th>Instructor</th>
 		<th>Tail No</th>
 		<th>Aircraft</th>
@@ -17,9 +10,7 @@
 	</tr>
 	<?php foreach ($flights as $flight): ?>
 	<tr>
-		<?php if(Authcomponent::user('type') != 'student'): ?>
 		<td><?php echo $flight['Flight']['studentid']; ?></td>
-		<?php endif ?>
 		<td><?php echo $flight['Flight']['instructorID']; ?></td>
 		<td><?php echo $flight['Flight']['tailNo']; ?></td>
 		<td><?php echo $flight['Flight']['aircraft']; ?></td>
@@ -29,19 +20,6 @@
 			array('controller' => 'flights', 'action' => 'view', $flight['Flight']['id']));
 			?>
 		</td>
-		<?php if(Authcomponent::user('type') != 'student'):?>
-		<td><?php 
-			if(Authcomponent::user('type') == 'admin')
-			{
-				echo $this->Form->postLink(
-				'Delete Flight',
-				array('action' => 'delete', $flight['Flight']['id'] ),
-				array('confirm' => 'Are you sure?')
-				);
-			}
-			?>
-		</td>	
-		<?php endif ?>
 	</tr>
 	<?php endforeach; ?>
 	<?php unset($flight); ?>
