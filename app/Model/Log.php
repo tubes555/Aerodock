@@ -59,7 +59,7 @@ public function loadCSV($uploadFile, $flightId){
         			if (!$setMaintFlag)
         			{
           				if ($row['RPM'] > 2750 || $row['OilT'] > 245 || 
-        				($row['MP'] > 15 && ($row['FuelP'] > 35 || $row['FuelP'] < 14)))
+        				($row['MAP'] > 15 && ($row['FPres'] > 35 || $row['FPres'] < 14)))
         					$setMaintFlag = true;
         			}
 
