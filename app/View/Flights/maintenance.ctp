@@ -3,8 +3,8 @@
 	<tr>
 		<th>Pilot</th>
 		<th>Instructor</th>
+		<th>Date</th>
 		<th>Tail No</th>
-		<th>Aircraft</th>
 		<th>Flight Length</th>
 		<th></th>
 	</tr>
@@ -12,8 +12,8 @@
 	<tr>
 		<td><?php echo $flight['Flight']['studentid']; ?></td>
 		<td><?php echo $flight['Flight']['instructorID']; ?></td>
+		<td><?php echo $flight['Flight']['date']; ?></td>
 		<td><?php echo $flight['Flight']['tailNo']; ?></td>
-		<td><?php echo $flight['Flight']['aircraft']; ?></td>
 		<td><?php echo number_format(((int)$flight['Flight']['duration'])/60, 0)." min" ?>
 		<td><?php echo $this->Html->link(
 			'View Flight',
