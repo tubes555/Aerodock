@@ -7,11 +7,17 @@
 <table class="table">
 	<tr>
 		<?php if(Authcomponent::user('type') != 'student'): ?>
-		<th>Student</th>
+		<th><?php echo $this->Html->link(
+		'Student',
+		array('controller' => 'flights', 'action' => 'sort', "Student"));?></th>
 		<?php endif ?>
-		<th>Instructor</th>
+		<th><?php echo $this->Html->link(
+		'Instructor',
+		array('controller' => 'flights', 'action' => 'sort', "Instructor"));?></th>
+		<th><?php echo $this->Html->link(
+		'Tail No',
+		array('controller' => 'flights', 'action' => 'sort', "Tail No"));?></th>
 		<th>Date</th>
-		<th>Tail No</th>
 		<th>Flight Length</th>
 		<th></th>
 	</tr>
@@ -21,8 +27,8 @@
 		<td><?php echo $flight['Flight']['studentid']; ?></td>
 		<?php endif ?>
 		<td><?php echo $flight['Flight']['instructorID']; ?></td>
-		<td><?php echo $flight['Flight']['date']; ?></td>
 		<td><?php echo $flight['Flight']['tailNo']; ?></td>
+		<td><?php echo $flight['Flight']['date']; ?></td>
 		<td><?php echo number_format(((int)$flight['Flight']['duration'])/60, 0)." min" ?>
 		<td><?php echo $this->Html->link(
 			'View Flight',
