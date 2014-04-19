@@ -88,11 +88,22 @@ class UsersController extends AppController {
     if (!$this->User->exists()) {
         throw new NotFoundException('Invalid user','fail');
     }
+
+    //get number of User.Type == 'admin'
+      $numAdmin = $this->User->find('count',array('conditions' => array('User.Type' => 'admin')));
+
     if ($this->request->is('post') || $this->request->is('put')) {
       $user = $this->User->findById($id);
       if($this->Auth->user('type') != 'admin'){
         $this->User->set('type', $user['User']['type']);
-      } else {
+      } 
+      else if($numAdmin <= 1 && $user['User']['type'] == 'admin') //if last adimn stop edit
+      {
+        $this->Session->setFlash('Failed to change user type. You are the only Admin.','fail');
+        return $this->redirect(
+            array('controller' => 'users', 'action' => 'index'));
+      }
+      else {
         if($this->request->data['User']['type'] == 0){
           $this->User->set('type', 'student');
         } else if($this->request->data['User']['type'] == 1){
@@ -129,6 +140,8 @@ class UsersController extends AppController {
             array('controller' => 'flights', 'action' => 'index'));
       }
       $this->set('user', $user);
+
+    
 
       if($user['User']['type'] == 'student'){
         $this->set('type', 0);
