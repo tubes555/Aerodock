@@ -10,13 +10,23 @@ class FlightsController extends AppController {
 	public function index(){
 		$user = $this->Auth->user();
 		if($user['type'] != 'student'){
-			$this->set('flights', $this->Flight->find('all'));
+			$this->set('flights', $this->Flight->find('all', array(
+        			'order' => 'Date DESC')));
 		} else {
 			$this->set('flights',
-							 $this->Flight->findAllByStudentid($this->Auth->user('username')));
+				$this->Flight->findAllByStudentid($this->Auth->user('username')));
 		}
 	}
-
+	
+  	public function sort($sortField){
+     		if ($sortField == "Student")
+        		$this->set('flights', $this->Flight->find('all', array('order' => array('studentid ASC', 'date DESC'))));
+     		else if ($sortField == "Instructor")
+        		$this->set('flights', $this->Flight->find('all', array('order' => array('instructorID ASC', 'date DESC'))));
+     		else if ($sortField == "Tail No")
+        		$this->set('flights', $this->Flight->find('all', array('order' => array('TailNo ASC', 'date DESC'))));
+     	}
+  
 	public function add(){
 		ClassRegistry::init('User');
 		$user = new User(); 
