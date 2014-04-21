@@ -125,8 +125,8 @@ class FlightsController extends AppController {
 																	 'action' => 'index'));
 		}
 		$this->set('flights',
-							 $this->Flight->findAllByMaintenance(1));
-
+			 $this->Flight->find('all', array('conditions' => array('maintenance' => 1), 
+			 	'order' => 'Date DESC')));
 	}
 
 	public function isAuthorized($user) {
