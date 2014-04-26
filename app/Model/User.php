@@ -73,7 +73,7 @@ class User extends AppModel {
             
                 $row['firstname'] = "";
                 $row['lastname'] = "";
-                $row['username'] = substr($names[$i], 0, strpos($names[$i], "@"));
+                $row['username'] = trim(substr($names[$i], 0, strpos($names[$i], "@")));
                 $row['type'] = "student";
                 $data[$i] = $row;
         }
