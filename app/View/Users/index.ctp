@@ -22,25 +22,21 @@
 		<?php endif ?>
 	</tr>
 	<?php foreach ($users as $user): ?>
-	<tr>
-		<td><?php echo $user['User']['firstname']; ?></td>
+		<tr>
+		<td><i class="fa fa-user"></i> <?php echo $user['User']['firstname']; ?></td>
 		<td><?php echo $user['User']['lastname']; ?></td>
 		<td><?php echo $user['User']['username']; ?></td>
 		<?php if(Authcomponent::user('type') != 'teacher'):?>
 		<td><?php echo $user['User']['type']; ?></td>
 		<?php endif ?>
-		<td><?php echo $this->Html->link(
-			'Edit User',
+		<td><i class="customBLUE"><i class="fa fa-pencil-square-o"></i></i><?php echo $this->Html->link(
+			' Edit User',
 			array('controller' => 'users', 'action' => 'edit', $user['User']['id']));
 			?></td>
-		<td><?php
-			if(Authcomponent::user('type') == 'admin')
-			{
-				 echo $this->Form->postLink(
-				'Delete User',
-				array('controller' => 'users', 'action' => 'delete', $user['User']['id']),
-				array('confirm' => 'Are you sure?'));
-			}
+		<td><i class="customRED"><i class="fa fa-times-circle"></i></i><?php echo $this->Form->postLink(
+			' Delete User',
+			array('controller' => 'users', 'action' => 'delete', $user['User']['id']),
+			array('confirm' => 'Are you sure?'));
 			?>
 		</td>
 	</tr>

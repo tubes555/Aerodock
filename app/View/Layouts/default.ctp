@@ -25,9 +25,10 @@
 		</title>
 		<?php
 			echo $this->Html->meta('icon');
-
-			//echo $this->Html->css('bootstrap');
-			?>	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+			echo $this->Html->css('font-awesome'); 
+		  echo $this->Html->css('customStyles'); 
+			echo $this->Html->css('bootstrap');
+			?>	
 		<?php
 			echo $this->fetch('meta');
 			echo $this->fetch('css');
@@ -35,13 +36,13 @@
 		?>
 	</head>
 	<body>
-	  <div class="navbar navbar-inverse" role="navigation">
+	  <div class="navbarCUSTOM" role="navigation">
 		  <div class="container">
 		    <div class="navbar-header">
 		    	<?php echo $this->Html->link('Aerodock',
 		        																	array('controller' => 'staticPages',
 		        																	 			 'action' => 'index'),
-		        																	array('class' => 'navbar-brand'));?>
+		        																	array('class' => 'navbar-brandCUSTOM'));?>
 		    </div>
 		    <div class="navbar-right">
 		      <?php if(AuthComponent::user('id')):?>
@@ -110,5 +111,6 @@
 
 			</div>
 		</div>
+		<?php echo $this->Js->writeBuffer(); ?>
 	</body>
 </html>

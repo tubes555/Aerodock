@@ -9,14 +9,15 @@
 ?>
 
 
-      <div class="jumbotron">
-        <h1>Aerodock<br>
+      <div class="jumbotronCUSTOM">
+        <style> h3{color:#00097F; font-size:65px; text-shadow:1px 1px #FFF;} h2{color:#262D7F;font-size:24px;text-shadow:1px 1px #FFF;}</style>
+        <h3><b>Aerodock</b><br>
         <small>MTSU Aerospace Student Flight Tracking</small></h1>
         <p><?php echo $this->Html->link('Sign in using your Pipeline ID and password',
         																array(
         																		'controller' => 'users',
         																		'action' => 'login'),
-        																		array('class' => 'btn btn-lg btn-success',
+        																		array('class' => 'btnBLUE',
         																				  'role' => 'button'));?>
       </div>
 

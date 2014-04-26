@@ -34,6 +34,7 @@ public function loadCSV($uploadFile, $flightId){
 			{
 				$date = $row[0];
 				$firstFlightTime = $row[1];
+				$lastFlightTime = $row[1];
 			}
 
 			if(count($row) == $numItems && !(ctype_space($row[4]) || ctype_space($row[5]))){
@@ -42,11 +43,22 @@ public function loadCSV($uploadFile, $flightId){
 				}
 				$row = array_combine($header, $row);
 
-
+				if((int)substr($row['Time'],0,2) <= (int)substr($lastFlightTime,0,2) &&
+					 (int)substr($row['Time'],3,2) <= (int)substr($lastFlightTime,3,2) &&
+					 (int)substr($row['Time'],6,2) <= (int)substr($lastFlightTime,6,2)){
+					if(substr($row['Time'],6,2) == '00'){
+						if(substr($row['Time'],3,2) == '00'){
+							$row['Time'] = ((string)((int)substr($row['Time'],0,2)) + 1).
+																		substr($row['Time'],2);
+						} else {
+							$row['Time'] = substr($row['Time'],0,3).
+																	((string)((int)substr($row['Time'],3,2)) + 1).
+																	substr($row['Time'],5);
+						}
+					}
+				}
 
 				$lastFlightTime = $row['Time'];
-
-
 
 				$row['flight_id'] = $flightId;
 				$data[$index] = $row;

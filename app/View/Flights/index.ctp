@@ -7,12 +7,12 @@
 <table class="table">
 	<tr>
 		<?php if(Authcomponent::user('type') != 'student'): ?>
-		<th>Student</th>
+		<th><i class="fa fa-male"></i> Student</th>
 		<?php endif ?>
-		<th>Instructor</th>
+		<th><i class="fa fa-user"></i> Instructor</th>
 		<th>Tail No</th>
-		<th>Aircraft</th>
-		<th>Flight Length</th>
+		<th><i class="fa fa-plane"></i> Aircraft</th>
+		<th><i class="fa fa-clock-o"></i> Flight Length</th>
 		<th></th>
 	</tr>
 	<?php foreach ($flights as $flight): ?>

@@ -1,8 +1,8 @@
 <?php
 class FlightsController extends AppController {
-	public $helpers = array('Html', 'Form', 'Session');
-	public $components = array('Session');
-	
+	public $helpers = array('Html', 'Form', 'Session', 'Js');
+	public $components = array('Session','RequestHandler');
+
 	public function beforeFilter() {
 	    parent::beforeFilter();
 	}
@@ -76,7 +76,6 @@ class FlightsController extends AppController {
 		else
 		{
 			$this->Session->SetFlash('Only an Administrator may delete flights.', 'fail');
-
 		}
 		return $this->redirect(array('contoller' => 'flights', 'action' => 'index'));
 
@@ -84,6 +83,7 @@ class FlightsController extends AppController {
 
 
 	public function view($id = null) {
+		$this->Flight->events(1);
 		if(!$id) {
 			throw new NotFoundException(__('Invalid flight'));
 		}		
@@ -100,11 +100,12 @@ class FlightsController extends AppController {
 
 		$this->set('flight', $flight);
 		$flightInfo = $this->Flight->getLatLong($flight['Flight']['id']);
-		$this->set('jspath', 'Flightjs'.DS.'al' . $flight['Flight']['id']);
 		$this->set('jslatlng', 'Flightjs'.DS.'latlong' . $flight['Flight']['id']);
 		$this->set('center', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
-		//$this->set('events', $this->Flight->)
+		$this->set('endSlice', array_shift($flightInfo));
+		$this->set('events',  $this->Flight->events($id)[0]);
+		$this->Session->write('events', $this->Flight->events($id)[1]);
 
 	}
 
@@ -119,6 +120,41 @@ class FlightsController extends AppController {
 
 	}
 
+	public function getData(){
+		$this->autoRender = false;
+		$this->layout = 'ajax';
+		if($this->request->data['studentid'] != $this->Auth->user('username') && 
+				$this->Auth->user('type') == 'student' ){
+			$this->Session->setFlash('Not authorized to view this flight.','fail');
+			return $this->redirect(
+					array('controller' => 'flights', 'action' => 'index'));
+		}
+		return $this->Flight->generateJsArray($this->request->data);
+
+	}
+	public function getEvents(){
+		$this->autoRender = false;
+		$this->layout = 'ajax';
+		if($this->request->data['studentid'] != $this->Auth->user('username') && 
+			$this->Auth->user('type') == 'student' ){
+			$this->Session->setFlash('Not authorized to view this flight.','fail');
+			return $this->redirect(
+					array('controller' => 'flights', 'action' => 'index'));
+		}
+		return $this->Session->read('events');
+	}
+
+	public function getCoords(){
+		$this->autoRender = false;
+		$this->layout = 'ajax';
+		if($this->request->data['studentid'] != $this->Auth->user('username') && 
+				$this->Auth->user('type') == 'student' ){
+			$this->Session->setFlash('Not authorized to view this flight.','fail');
+			return $this->redirect(
+					array('controller' => 'flights', 'action' => 'index'));
+		}
+		return $this->Flight->generateCoords($this->request->data);
+	}
 	public function isAuthorized($user) {
 	    // Admin can access every action
 	    if ($user) {

@@ -1,0 +1,111 @@
+
+.btnBLUE {
+	display: inline-block;
+	argin-bottom: 0px;
+	font-weight: 400;
+	ext-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	color: #FFF;
+	background-color: #4C5AFF;
+	border-color: #194396;
+	padding: 10px 16px;
+	font-size: 18px;
+	line-height: 1.33;
+	border-radius: 6px;
+}
+
+a.btnBLUE:hover{
+	color: #CCFFFF;
+	text-decoration: none;
+}
+
+.jumbotronCUSTOM
+{
+	padding-right: 60px;
+	padding-left: 60px;
+	border-radius: 6px;
+	padding-top: 48px;
+	padding-bottom: 48px;
+	margin-bottom: 30px;
+	color: inherit;
+	background-image:url('bg/bannerbg.jpg');
+}
+
+.navbarCUSTOM
+{
+	background-color: #00097F;
+    border-color: #080808;
+    position: relative;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+}
+
+.navbar-brandCUSTOM
+{
+	float: left;
+	padding: 15px;
+	font-size: 18px;
+	line-height: 20px;
+	height: 50px;
+}
+a.navbar-brandCUSTOM
+{
+	color: #FFF;
+	text-decoration: none;
+}
+
+.btnCUSTOM
+{
+	color: #fff;
+	background-color: #4C5AFF;
+	border-color: #194396;
+	display: inline-block;
+	margin-bottom: 0;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: none;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	border-radius: 4px;
+	-webkit-user-select: none;
+}
+
+.navLINK
+{
+	color: #FFF;
+}
+a.navLINK
+{
+	color: #FFF:
+}
+li.navLINK
+{
+	color: #FFF;
+}
+a.li.navLINK
+{
+	color: #FFF;
+}
+
+.customBLUE
+{
+	color: blue;
+}
+.customRED
+{
+	color: red;
+}
+.customGREEN
+{
+	color: green;
+}
