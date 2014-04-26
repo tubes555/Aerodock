@@ -27,7 +27,7 @@ public function loadCSV($uploadFile, $flightId){
 		$index = 0;
 		$firstFlightTime = "";
 		$lastFlightTime = "";
-
+		$setMaintFlag = false;
 		$data = array();
 		while($row = fgetcsv($handle)) {
 			if($index == 0)
@@ -60,6 +60,21 @@ public function loadCSV($uploadFile, $flightId){
 
 				$lastFlightTime = $row['Time'];
 
+				if (!$setMaintFlag)
+				{
+        				if ($row['CHT1'] > 500 || $row['CHT2'] > 500 || 
+        				$row['CHT3'] > 500 || $row['CHT4'] > 500 )
+          				{
+        					 $setMaintFlag = true;
+        				}
+        			}
+        
+        			if (!$setMaintFlag)
+        			{
+          				if ($row['RPM'] > 2750 || $row['OilT'] > 245 || 
+        				($row['MAP'] > 15 && ($row['FPres'] > 35 || $row['FPres'] < 14)))
+        					$setMaintFlag = true;
+        			}
 				$row['flight_id'] = $flightId;
 				$data[$index] = $row;
 				$index++;
@@ -73,7 +88,9 @@ public function loadCSV($uploadFile, $flightId){
 			}
 
 		}
-
+		$flags = 0;
+		if ($setMaintFlag)
+			$flags += 1;
 		$this->create();
 		$this->saveMany($data);
 
@@ -87,7 +104,8 @@ public function loadCSV($uploadFile, $flightId){
 								 "duration" => $delta,
 								 "date" => $date, 
 								 "tailNo" => $tailNumber, 
-								 "aircraft" => $aircraft);
+								 "aircraft" => $aircraft,
+								 "maintenance" => $flags);
 	}
 
 	public function deleteLog($id)

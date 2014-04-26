@@ -7,20 +7,18 @@
 <table class="table">
 	<tr>
 		<?php if(Authcomponent::user('type') != 'student'): ?>
-
-		<th><i class="fa fa-male"></i><?php echo $this->Html->link(
+		<th><?php echo $this->Html->link(
 		'Student',
 		array('controller' => 'flights', 'action' => 'sort', "Student"));?></th>
 		<?php endif ?>
-		<th><i class="fa fa-user"></i><?php echo $this->Html->link(
+		<th><?php echo $this->Html->link(
 		'Instructor',
 		array('controller' => 'flights', 'action' => 'sort', "Instructor"));?></th>
 		<th><?php echo $this->Html->link(
 		'Tail No',
 		array('controller' => 'flights', 'action' => 'sort', "Tail No"));?></th>
 		<th>Date</th>
-		<th><i class="fa fa-clock-o"></i> Flight Length</th>
-		<th></th>
+		<th>Flight Length</th>
 		<th></th>
 	</tr>
 	<?php foreach ($flights as $flight): ?>
