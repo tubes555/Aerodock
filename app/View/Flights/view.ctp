@@ -4,21 +4,9 @@
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false"></script>
 <div class="row">
   <div  class="col-md-7">
-    <div id="googleMap" style="width:550px;height:380px;"></div>
+    <div id="googleMap" style="width:500px;height:380px;"></div>
   </div>
-  <div class="col-md-4 turn-table">
-    <table class="table table-striped">
-
-       <?php 
-      if(count($events)>=1){
-        foreach ($events as $key => $turn){
-          echo $this->Html->tableCells(array(
-            array(
-              array($turn['name'],
-                array('id'=>'turn'.$key)))));}}
-              ?>
-    </table>
-  </div>
+  
 </div>
 <div class="row text-center graph-selector">
   <div class="btn-group">
@@ -117,7 +105,7 @@
 
     // Set chart options
     var options =  {'width':900,
-                    'height':200,
+                    'height':300,
                     series:{0:{targetAxisIndex:0},
                             1:{targetAxisIndex:1}},
                     vAxes:[
@@ -377,10 +365,10 @@
     interval = Math.floor((endSlice - beginSlice) * interval / 1000);
     data.addRows(graphData);
     var options =  {'width':900,
-              'height':250,
+              'height':300,
               series:activeSeries,
               vAxes:vAxesList,
-              legend: { position: 'right'},
+              legend: { position: 'none'},
               focusTarget: 'category',
               vAxis:{ticks: []},
               colors:colorsList};

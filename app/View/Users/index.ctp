@@ -21,7 +21,40 @@
 		<th>Delete</th>
 		<?php endif ?>
 	</tr>
-	<?php foreach ($users as $user): ?>
+	<?php
+
+	$namearray=array();
+	$sorted=array();
+	$counter=0;
+	foreach($users as $user)
+	{
+	  $namearray[$counter]=strtolower($user['User']['lastname']);  	  
+	  $counter++;
+	  
+	}
+	asort($namearray);
+	
+	//reset($namearray);
+	//reset($users);
+	$counter2=0;
+	$counter=0;
+	foreach($namearray as $aname)
+	{
+	  foreach($users as $user)
+	  {
+	  
+	    if($aname==strtolower($user['User']['lastname']))
+	    {
+	   
+	      $sorted[$counter2]=$user;
+	      $counter2++;
+	    }
+	  }
+	  
+	  $counter++;
+	}
+
+	foreach ($sorted as $user): ?>
 		<tr>
 		<td><i class="fa fa-user"></i> <?php echo $user['User']['firstname']; ?></td>
 		<td><?php echo $user['User']['lastname']; ?></td>
@@ -37,6 +70,13 @@
 			' Delete User',
 			array('controller' => 'users', 'action' => 'delete', $user['User']['id']),
 			array('confirm' => 'Are you sure?'));
+			?>
+		</td>
+				<td>
+			<?php 
+			echo $this->Html->link(
+			'Flight Log',
+			array('controller' => 'users', 'action' => 'flights', $user['User']['username']));
 			?>
 		</td>
 	</tr>

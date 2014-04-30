@@ -28,6 +28,8 @@ class UsersController extends AppController {
     }
 
   }
+  
+  
 
   public function delete($id) 
   {
@@ -165,6 +167,11 @@ class UsersController extends AppController {
     }
   }
 
+    public function flights($id=null)
+  {
+    return $this->redirect(array('controller' => 'flights', 'action' => 'index', $id));
+  }
+  
   public function index(){
     if($this->Auth->user('type') == 'admin'){
       $this->set('users', $this->User->find('all'));

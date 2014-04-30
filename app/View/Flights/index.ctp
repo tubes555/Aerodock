@@ -2,8 +2,10 @@
 <?php if(Authcomponent::user('type') != 'student'){
 	echo $this->Html->link(
 		'Add Flight',
-		array('controller' => 'flights', 'action' => 'add'));
+		array('controller' => 'flights', 'action' => 'add', $currentUserID));
 	}?>
+<?php echo $this->Form->create(array('action' => 'view_selection', 'method' => 'post'));?>
+<?php //echo $this->Form->button('View Selected', array('action' => 'view_selection', 'method' => 'post')); ?>
 <table class="table">
 	<tr>
 		<?php if(Authcomponent::user('type') != 'student'): ?>
@@ -23,8 +25,23 @@
 		<th></th>
 		<th></th>
 	</tr>
+	<?php
+		//I put this here because I think postLink is bugged up when it is 1st called
+	//Issue with not generating a post link causing undefined method error
+	 echo $this->Form->postLink(
+			null,
+			null,
+			null);
+			?>
+  <?php $counter=0;?>
 	<?php foreach ($flights as $flight): ?>
 	<tr>
+   <?php /* <td>
+      <?php echo $this->Form->checkbox('flight_checkbox'.$counter, array('value' => $flight['Flight']['id'])); ?>
+    </td>*/?>
+
+    <?php $counter++?>
+    
 		<?php if(Authcomponent::user('type') != 'student'): ?>
 		<td><?php echo $flight['Flight']['studentid']; ?></td>
 		<?php endif ?>

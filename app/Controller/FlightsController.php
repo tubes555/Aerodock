@@ -7,17 +7,60 @@ class FlightsController extends AppController {
 	    parent::beforeFilter();
 	}
 
-	public function index(){
+	public function index($auser=null){
+		if(!$auser) $auser=$this->Auth->user('username');
+		$auserID=$this->Auth->user('id');
 		$user = $this->Auth->user();
-		if($user['type'] != 'student'){
-			$this->set('flights', $this->Flight->find('all', array(
-        			'order' => 'Date DESC')));
-		} else {
-			$this->set('flights',
-				$this->Flight->findAllByStudentid($this->Auth->user('username')));
-		}
+		$this->set('type', $this->Auth->user('type'));
+		$this->set('flights', $this->Flight->findAllByStudentid($auser));
+		$this->set('currentUserID', $auser);
 	}
 	
+	public function view_selection()
+	{
+	//doesn't work
+	//a bunch of junk of nothing but tring to get google maps displayed in tiles
+	//without me knowing what really is going on in the javascript
+	/*
+	$this->set('mapnumber', '0');
+	$checkcount=0;
+	$checknumber="flight_checkbox".$checkcount;
+	while(array_key_exists($checknumber, $this->request->data['Flight']))
+	{
+	if($this->request->data['Flight'][$checknumber]!=0)
+	{
+	$this->set('mapnumber', $checkcount+1);
+		$id=$this->request->data['Flight'][$checknumber];
+		
+		if(!$id) {
+				//throw new NotFoundException(__('Invalid flight'));
+				return $this->redirect(array('action' => 'index'));
+		}		
+		$flight = $this->Flight->findById($id);	
+		if(!$flight){
+			//throw new NotFoundException(__('Invalid flight'));
+			return $this->redirect(array('action' => 'index'));
+		}	
+		if($flight['Flight']['studentid'] != $this->Auth->user('username') && 
+				$this->Auth->user('type') == 'student' ){
+			$this->Session->setFlash('Not authorized to view this flight.','fail');
+			return $this->redirect(
+					array('controller' => 'flights', 'action' => 'index'));
+		}
+
+		$this->set('flight['.$checkcount.']', $flight);
+		$flightInfo = $this->Flight->getLatLong($flight['Flight']['id']);
+		$this->set('jslatlng['.$checkcount.']', 'Flightjs'.DS.'latlong' . $flight['Flight']['id']);
+		$this->set('center['.$checkcount.']', array_shift($flightInfo));
+		$this->set('zoomLevel['.$checkcount.']', array_shift($flightInfo));
+		$this->set('endSlice['.$checkcount.']', array_shift($flightInfo));
+
+			}
+						$checkcount++;
+			$checknumber="flight_checkbox".$checkcount;
+		}*/
+	}
+
   	public function sort($sortField){
      		if ($sortField == "Student")
         		$this->set('flights', $this->Flight->find('all', array('order' => array('studentid ASC', 'date DESC'))));
@@ -27,19 +70,17 @@ class FlightsController extends AppController {
         		$this->set('flights', $this->Flight->find('all', array('order' => array('TailNo ASC', 'date DESC'))));
      	}
   
-	public function add(){
+	public function add($currentUserID=null){
 		ClassRegistry::init('User');
 		$user = new User(); 
+		$this->set('currentUserID',$currentUserID);
 		if($this->request->is('post')) {
 			if($this->request->data['Flight']['csvPath']['size'] == 0){
 				$this->Session->setFlash('Attach CSV to upload flight.', 'fail');
 				return $this->redirect(array('action' => 'add'));
 			}
-			if($this->request->data['Flight']['csvPath']['type'] != 'text/csv'){
-				$this->Session->setFlash('Only attach CSVs for upload.', 'fail');
-				return $this->redirect(array('action' => 'add'));
-			}
-			if(count($user->findByUsername($this->request->data['Flight']['studentid']))==0){
+			
+			if(count($user->findByUsername($currentUserID))==0){
 				$this->Session->setFlash('User with this ID is not in the system.', 'fail');
 				return $this->redirect(array('action' => 'add'));
 			}
@@ -65,14 +106,16 @@ class FlightsController extends AppController {
 
 	public function delete($id)
 	{
-		
+	ClassRegistry::init('Log');
+		$log = new Log();
+
 		if( $this->request->is('get') )
 		{
 			$this->Session->setFlash('You can not delete flights.', 'fail');
 			return $this->redirect(array('action' => 'index'));
 		}
 		
-		if($this->Auth->user('type') == 'admin' && $this->Flight->deleteFlight($id))
+		if($this->Auth->user('type') == 'admin')
 		{
 			if($this->Flight->delete($id) && $log->deleteLog($id))
 			{
@@ -86,6 +129,7 @@ class FlightsController extends AppController {
 		else
 		{
 			$this->Session->SetFlash('Only an Administrator may delete flights.', 'fail');
+
 		}
 		return $this->redirect(array('contoller' => 'flights', 'action' => 'index'));
 
@@ -93,7 +137,7 @@ class FlightsController extends AppController {
 
 
 	public function view($id = null) {
-		$this->Flight->events(1);
+		//$this->Flight->events(1);
 		if(!$id) {
 			throw new NotFoundException(__('Invalid flight'));
 		}		
@@ -114,8 +158,8 @@ class FlightsController extends AppController {
 		$this->set('center', array_shift($flightInfo));
 		$this->set('zoomLevel', array_shift($flightInfo));
 		$this->set('endSlice', array_shift($flightInfo));
-		$this->set('events',  $this->Flight->events($id)[0]);
-		$this->Session->write('events', $this->Flight->events($id)[1]);
+		//$this->set('events',  $this->Flight->events($id)[0]);
+		//$this->Session->write('events', $this->Flight->events($id)[1]);
 
 	}
 
